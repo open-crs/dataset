@@ -1,0 +1,6 @@
+[submodule "raw_datasets/nist-juliet"]
+	path = raw_datasets/nist-juliet
+	url = https://github.com/arichardson/juliet-test-suite-c
+[submodule "raw_datasets/cgc-samples"]
+	path = raw_datasets/cgc-samples
+	url = https://github.com/CyberGrandChallenge/samples
