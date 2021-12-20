@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 import click
 
 from modules.dataset_worker import DatasetWorker
+from modules.dataset_nist_parser import make_nist
 
 RAW_DATASETS = "raw_datasets/"
 C_TEST_SUITE_DATASET_NAME = "nist_c_test_suite"
@@ -90,10 +91,7 @@ def make_nist_c_test_suite(ctx):
 @click.pass_context
 def make_nist_juliet(ctx):
     dataset_worker = DatasetWorker(DATASET_LABELS)
-
-    # TODO(@Phineas09): Call the build method from your module, in which the
-    #                   add() function is called
-
+    make_nist(dataset_worker)
     dataset_worker.dump()
 
 
