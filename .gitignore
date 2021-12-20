@@ -1,0 +1,8 @@
+sources/*
+!sources/.gitkeep
+executables/*
+!executables/.gitkeep
+
+*.pyc
+
+.vscode
