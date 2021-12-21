@@ -3,11 +3,12 @@ import subprocess
 import shutil
 from .dataset_worker import DatasetWorker
 
-DATABASE_NAME = 'nist_'
+DATABASE_NAME = 'nist_juliet_'
 NIST_JULIET_DATASET_NAME = "nist_juliet"
 DATABASE_PATH = "/raw_datasets/" + NIST_JULIET_DATASET_NAME
 
 #os.chdir('/mnt/d/Master/Disertatie/Datasets/dataset')
+
 
 class DatasetException(Exception):
     """Dataset exception class for our app
@@ -16,15 +17,16 @@ class DatasetException(Exception):
         expression : input expression in which the error occurred
         message : explanation of the error
     """
-    
     def __init__(self, expression, message):
         self.expression = expression
         self.message = message
 
-def _generate_makefile(source_id : int) -> int:
+
+def _generate_makefile(source_id: int) -> int:
     try:
         working_dir = os.getcwd()
-        source_root_dir = working_dir + "/sources/" + DATABASE_NAME +str(source_id)
+        source_root_dir = working_dir + "/sources/" + DATABASE_NAME + str(
+            source_id)
         source_location = source_root_dir + "/src"
         source_location_files_list = os.listdir(source_location)
 
@@ -35,15 +37,16 @@ def _generate_makefile(source_id : int) -> int:
 
             compiler = None
 
-            # Some sources are .cpp other are .c 
+            # Some sources are .cpp other are .c
             if source_type == '.c':
                 compiler = 'gcc'
             else:
                 compiler = 'g++'
 
-            makefile_string = "FLAGS = -c -Wall -DINCLUDEMAIN -I../nist_lib/\n\nall: binary\n\nbinary:\n\t%s $(FLAGS) -o binary.elf src/source%s" % (compiler, source_type)
+            makefile_string = "FLAGS = -c -Wall -DINCLUDEMAIN -I../nist_lib/\n\nall: binary\n\nbinary:\n\t%s $(FLAGS) -o binary.elf src/source%s" % (
+                compiler, source_type)
             makefile_path = source_root_dir + "/Makefile"
-            
+
             # Write the makefile so that it will work from that directory when calling `make`
 
             # Check fi existst
@@ -51,25 +54,30 @@ def _generate_makefile(source_id : int) -> int:
                 with open(makefile_path, "w") as makefile:
                     makefile.write(makefile_string)
         else:
-            raise DatasetException("_generate_makefile", "No source file was find for " 
-            + DATABASE_NAME + str(source_id))
-    
+            raise DatasetException(
+                "_generate_makefile", "No source file was find for " +
+                DATABASE_NAME + str(source_id))
+
     except Exception as exception:
         raise DatasetException("_generate_makefile", str(exception))
-    
+
     return 0
 
-def _generate_readme(source_id : int, cwe : str, binary_description : str) -> int:
+
+def _generate_readme(source_id: int, cwe: str, binary_description: str) -> int:
 
     if not cwe or not binary_description:
-        raise DatasetException("_generate_readme", "Empty cwe or binary_description strings!")
+        raise DatasetException("_generate_readme",
+                               "Empty cwe or binary_description strings!")
 
     try:
         working_dir = os.getcwd()
-        source_root_dir = working_dir + "/sources/" + DATABASE_NAME + str(source_id)
+        source_root_dir = working_dir + "/sources/" + DATABASE_NAME + str(
+            source_id)
 
         readme_path = source_root_dir + "/README.md"
-        readme_string = "# %s\n\nVulnerability Name: **%s**\n\nDataset: **MNIST**\n\nBinary can be build via the **Makefile**" % (cwe, binary_description)
+        readme_string = "# %s\n\nVulnerability Name: **%s**\n\nDataset: **MNIST**\n\nBinary can be build via the **Makefile**" % (
+            cwe, binary_description)
 
         if os.path.isfile(readme_path) == False:
             with open(readme_path, "w") as makefile:
@@ -79,16 +87,19 @@ def _generate_readme(source_id : int, cwe : str, binary_description : str) -> in
         raise DatasetException("_generate_readme", str(exception))
     return 0
 
-def _compile_binary(source_id: int) -> int: 
+
+def _compile_binary(source_id: int) -> int:
 
     try:
         working_dir = os.getcwd()
-        source_root_dir = working_dir + "/sources/" + DATABASE_NAME + str(source_id)
+        source_root_dir = working_dir + "/sources/" + DATABASE_NAME + str(
+            source_id)
         source_location = source_root_dir + "/src"
         source_location_files_list = os.listdir(source_location)
 
-        include_folder_path =  working_dir + "/sources/" + "nist_lib/"
-        binary_out_path = working_dir + "/executables/" + DATABASE_NAME + str(source_id) + ".elf"
+        include_folder_path = working_dir + "/sources/" + "nist_lib/"
+        binary_out_path = working_dir + "/executables/" + DATABASE_NAME + str(
+            source_id) + ".elf"
 
         if len(source_location_files_list) == 1:
             # Only one source at this point at least is used per binary
@@ -96,22 +107,23 @@ def _compile_binary(source_id: int) -> int:
             source_type = os.path.splitext(source_file_path)[1]
             compiler = None
 
-            # Some sources are .cpp other are .c 
+            # Some sources are .cpp other are .c
             if source_type == '.c':
                 compiler = 'gcc'
             else:
                 compiler = 'g++'
 
-            compile_string = "%s -c -Wall -DINCLUDEMAIN -I%s -o %s %s" % (compiler,
-             include_folder_path, binary_out_path, source_location + "/" + source_file_path)
-            
+            compile_string = "%s -c -Wall -DINCLUDEMAIN -I%s -o %s %s" % (
+                compiler, include_folder_path, binary_out_path,
+                source_location + "/" + source_file_path)
+
             # Run gcc or g++ with given arguments inside a TreadPoolExecutor
-            
+
             #if os.path.isfile(binary_out_path) == False:
-            
+
             process = subprocess.Popen(compile_string.split(" "),
-                     stdout=subprocess.PIPE, 
-                     stderr=subprocess.PIPE)
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
             out, err = process.communicate()
 
             # If no exception or out was generated then we are ok!
@@ -119,36 +131,43 @@ def _compile_binary(source_id: int) -> int:
                 return 0
 
         else:
-            raise DatasetException("_compile_binary", "No source file was find for "
-             + DATABASE_NAME + str(source_id))
-    
+            raise DatasetException(
+                "_compile_binary", "No source file was find for " +
+                DATABASE_NAME + str(source_id))
+
     except Exception as exception:
         raise DatasetException("_compile_binary", str(exception))
-    
+
     return 1
+
 
 def _log_compile(future):
     try:
         thread_result = future.result()
         if thread_result == 0:
-            print("Executable " + str(future.source_id) + " has finished succesfully!")
+            print("Executable " + str(future.source_id) +
+                  " has finished succesfully!")
         else:
-            print("Executable " + str(future.source_id) + " has finished with error "
-             + str(thread_result) + " !")
+            print("Executable " + str(future.source_id) +
+                  " has finished with error " + str(thread_result) + " !")
     except Exception as exception:
-        print("Exception occured during compiling of " + str(future.source_id) + " : "
-         + str(exception))
+        print("Exception occured during compiling of " +
+              str(future.source_id) + " : " + str(exception))
 
-def _create_directory_not_exist(directory_path : str) -> None:
+
+def _create_directory_not_exist(directory_path: str) -> None:
     if not os.path.exists(directory_path):
         os.mkdir(directory_path)
 
-def _process_file(source_id : int, source_path :str, dataset_worker : DatasetWorker) -> int :
+
+def _process_file(source_id: int, source_path: str,
+                  dataset_worker: DatasetWorker) -> int:
 
     working_dir = os.getcwd()
 
     # Create directories
-    source_directory = working_dir + "/sources/" + DATABASE_NAME + str(source_id) 
+    source_directory = working_dir + "/sources/" + DATABASE_NAME + str(
+        source_id)
     _create_directory_not_exist(source_directory)
     _create_directory_not_exist(source_directory + "/src/")
     _create_directory_not_exist(source_directory + "/lib/")
@@ -156,7 +175,7 @@ def _process_file(source_id : int, source_path :str, dataset_worker : DatasetWor
     # Copy source file
 
     extension = os.path.splitext(source_path)[1]
-    
+
     # Error if we have a .h file
     # Must write more code here
     # Found a solution @ 6:13 AM
@@ -164,44 +183,47 @@ def _process_file(source_id : int, source_path :str, dataset_worker : DatasetWor
     base_file_name = os.path.basename(source_path)
 
     if extension == ".h":
-        shutil.copy(working_dir + source_path, working_dir + "/sources/nist_lib/"
-         + base_file_name)
+        shutil.copy(working_dir + source_path,
+                    working_dir + "/sources/nist_lib/" + base_file_name)
         return 0
     else:
-        shutil.copy(working_dir + source_path, working_dir + "/sources/" +
-         DATABASE_NAME + str(source_id) + "/src/source" + extension)
+        shutil.copy(
+            working_dir + source_path, working_dir + "/sources/" +
+            DATABASE_NAME + str(source_id) + "/src/source" + extension)
         # We are here so it's a valid source file
         # Get propetry from filename
         # /raw_datasets/nist/testcases/CWE90_LDAP_Injection/CWE90_LDAP_Injection__w32_wchar_t_listen_socket_84_goodG2B.cpp # Example
-        base_file_name = os.path.splitext(base_file_name)[0] # Keep only filename without extension
+        base_file_name = os.path.splitext(base_file_name)[
+            0]  # Keep only filename without extension
         # First test if source file exists
 
-        if os.path.exists(working_dir + "/sources/" + DATABASE_NAME + 
-        str(source_id) + "/src/source" + extension) == True:
+        if os.path.exists(working_dir + "/sources/" + DATABASE_NAME +
+                          str(source_id) + "/src/source" + extension) == True:
             _generate_makefile(source_id)
             cwe_filename_splitted = base_file_name.split("_")
             cwe_name = cwe_filename_splitted[0]
             cwe_filename_splitted.pop()
-            _generate_readme(source_id, cwe_name, " ".join(cwe_filename_splitted))
+            _generate_readme(source_id, cwe_name,
+                             " ".join(cwe_filename_splitted))
             compile_result = _compile_binary(source_id)
 
-
             if compile_result == 0:
-                dataset_worker.add(DATABASE_NAME + str(source_id), [cwe_name], NIST_JULIET_DATASET_NAME)
-                print("Executable " + DATABASE_NAME + str(source_id) + 
-                " has finished succesfully!")
+                dataset_worker.add(DATABASE_NAME + str(source_id), [cwe_name],
+                                   NIST_JULIET_DATASET_NAME)
+                print("Executable " + DATABASE_NAME + str(source_id) +
+                      " has finished succesfully!")
                 return 1
             else:
-                print("Executable " + DATABASE_NAME + str(source_id) + 
-                " has finished with error " + str(compile_result) + " !")
-                os.remove(working_dir + "/sources/" +
-                    DATABASE_NAME + str(source_id) + "/src/source" + extension)
+                print("Executable " + DATABASE_NAME + str(source_id) +
+                      " has finished with error " + str(compile_result) + " !")
+                os.remove(working_dir + "/sources/" + DATABASE_NAME +
+                          str(source_id) + "/src/source" + extension)
                 return 0
 
     return 0
 
 
-def make_nist(dataset_worker : DatasetWorker) -> int:
+def make_nist_juliet(dataset_worker: DatasetWorker) -> int:
     '''Function used to build and move the NIST dataset accordingly to our plan. 
 Returns 0 if it succeeded else throws an DatasetException'''
 
@@ -209,7 +231,7 @@ Returns 0 if it succeeded else throws an DatasetException'''
 
     #_generate_makefile(1)
     #_generate_readme(1, "CWE23", "Relative Path Traversal char environment ofstream")
-    
+
     # Must find a way to get an ID, starting from 1 if folder is empty or from the max number if it is not empty
 
     # Must compile the executable first if does not compile, mark it as error
@@ -233,28 +255,33 @@ Returns 0 if it succeeded else throws an DatasetException'''
 
     # Copy header files
 
-    header_files = os.listdir(working_dir + DATABASE_PATH + "/testcasesupport")  
+    header_files = os.listdir(working_dir + DATABASE_PATH + "/testcasesupport")
     for header_file in header_files:
-        shutil.copy(working_dir + DATABASE_PATH + "/testcasesupport/" + 
-        header_file, working_dir + "/sources/nist_lib/" + header_file)
+        shutil.copy(
+            working_dir + DATABASE_PATH + "/testcasesupport/" + header_file,
+            working_dir + "/sources/nist_lib/" + header_file)
 
-    # Fetch all files 
+    # Fetch all files
     for cwe_directory in cwe_source_dirss:
         cwe_directory_files = os.listdir(cew_root_dir + cwe_directory + "/")
         for source_file in cwe_directory_files:
 
             # Check if it's a folder
-            if os.path.isdir(cew_root_dir + cwe_directory + "/" + source_file) == True:
-                source_files = os.listdir(cew_root_dir + cwe_directory + "/" + source_file)
+            if os.path.isdir(cew_root_dir + cwe_directory + "/" +
+                             source_file) == True:
+                source_files = os.listdir(cew_root_dir + cwe_directory + "/" +
+                                          source_file)
                 for file in source_files:
                     #process file
-                    source_id += _process_file(source_id, DATABASE_PATH +
-                     "/testcases/" + cwe_directory + "/" + source_file + "/" + file, dataset_worker)
+                    source_id += _process_file(
+                        source_id, DATABASE_PATH + "/testcases/" +
+                        cwe_directory + "/" + source_file + "/" + file,
+                        dataset_worker)
 
             else:
                 # process file
-                source_id +=_process_file(source_id, DATABASE_PATH + 
-                "/testcases/" + cwe_directory + "/" + source_file, dataset_worker)
+                source_id += _process_file(
+                    source_id, DATABASE_PATH + "/testcases/" + cwe_directory +
+                    "/" + source_file, dataset_worker)
 
     return 0
-

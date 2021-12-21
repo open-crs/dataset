@@ -4,11 +4,12 @@ import re
 import os
 import shutil
 import xml.etree.ElementTree as ET
+import subprocess
 
 import click
 
 from modules.dataset_worker import DatasetWorker
-from modules.dataset_nist_parser import make_nist
+from modules.nist_juliet_parser import make_nist_juliet as make_nist_juliet_back
 
 RAW_DATASETS = "raw_datasets/"
 C_TEST_SUITE_DATASET_NAME = "nist_c_test_suite"
@@ -56,9 +57,8 @@ def make_nist_c_test_suite(ctx):
     dataset_worker = DatasetWorker(DATASET_LABELS)
 
     # Create all the executables
-    #TODO(@iosifache): Ensure that the programs are compiled via a wait
-    #                  mechanism.
-    os.system("cd {} && make all".format(C_TEST_SUITE_DATASET))
+    command = "cd {} && make all".format(C_TEST_SUITE_DATASET)
+    os.system(command)
 
     # Process each executable
     files = os.listdir(C_TEST_SUITE_DATASET_EXECUTABLES)
@@ -66,14 +66,16 @@ def make_nist_c_test_suite(ctx):
         if executable.endswith(ELF_EXTENSION):
             # Copy the executable
             executable_path = C_TEST_SUITE_DATASET_EXECUTABLES + executable
-            shutil.copytree(executable_path, MAIN_DATASET_EXECUTABLES)
+            if not os.path.exists(executable_path):
+                shutil.copy(executable_path, MAIN_DATASET_EXECUTABLES)
 
             # Copy the source code
             base_program_id = executable[:len(ELF_EXTENSION) - 1]
             program_id = C_TEST_SUITE_DATASET_NAME + "_" + base_program_id
             src_folder = C_TEST_SUITE_DATASET_SOURCES + base_program_id
             dest_folder = MAIN_DATASET_SOURCES + program_id
-            shutil.copytree(src_folder, dest_folder)
+            if not os.path.exists(executable_path):
+                shutil.copytree(src_folder, dest_folder)
 
             # Add the executable into the CSV
             dataset_worker.add(program_id, cwes[int(base_program_id)],
@@ -91,7 +93,7 @@ def make_nist_c_test_suite(ctx):
 @click.pass_context
 def make_nist_juliet(ctx):
     dataset_worker = DatasetWorker(DATASET_LABELS)
-    make_nist(dataset_worker)
+    make_nist_juliet_back(dataset_worker)
     dataset_worker.dump()
 
 
