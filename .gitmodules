@@ -1,6 +1,6 @@
-[submodule "raw_datasets/nist-juliet"]
-	path = raw_datasets/nist_juliet
+[submodule "raw_testcases/nist-juliet"]
+	path = raw_testcases/nist_juliet
 	url = https://github.com/arichardson/juliet-test-suite-c
-[submodule "raw_datasets/nist_c_test_suite"]
-	path = raw_datasets/nist_c_test_suite
+[submodule "raw_testcases/nist_c_test_suite"]
+	path = raw_testcases/nist_c_test_suite
 	url = https://github.com/CyberReasoningSystem/nist_c_test_suite

@@ -5,7 +5,7 @@ from .dataset_worker import DatasetWorker
 
 DATABASE_NAME = 'nist_juliet_'
 NIST_JULIET_DATASET_NAME = "nist_juliet"
-DATABASE_PATH = "/raw_datasets/" + NIST_JULIET_DATASET_NAME
+DATABASE_PATH = "/raw_testsuites/" + NIST_JULIET_DATASET_NAME
 
 #os.chdir('/mnt/d/Master/Disertatie/Datasets/dataset')
 
@@ -192,7 +192,7 @@ def _process_file(source_id: int, source_path: str,
             DATABASE_NAME + str(source_id) + "/src/source" + extension)
         # We are here so it's a valid source file
         # Get propetry from filename
-        # /raw_datasets/nist/testcases/CWE90_LDAP_Injection/CWE90_LDAP_Injection__w32_wchar_t_listen_socket_84_goodG2B.cpp # Example
+        # /raw_testsuites/nist/testcases/CWE90_LDAP_Injection/CWE90_LDAP_Injection__w32_wchar_t_listen_socket_84_goodG2B.cpp # Example
         base_file_name = os.path.splitext(base_file_name)[
             0]  # Keep only filename without extension
         # First test if source file exists
