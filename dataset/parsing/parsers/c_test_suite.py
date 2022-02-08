@@ -17,9 +17,16 @@ CWE_REGEX = r"CWE-([0-9]+)"
 class CTestSuiteParser(BaseParser):
 
     def __init__(source_name: str) -> str:
+        """Initializes the CTestSuiteParser instance."""
         super().__init__(DATASET_NAME, COMPILE_FLAGS)
 
     def _get_all_sources(self) -> typing.List[SourceDetails]:
+        """Gets all the sources from the current test suite.
+
+        Returns:
+            typing.List[SourceDetails]: List with all the sources from the
+                current dataset
+        """
         # Parse the manifest to get the CWEs
         tree = ET.parse(DATASET_MANIFEST)
         root = tree.getroot()

@@ -1,8 +1,13 @@
+# Ignore the preprocessed sources
 sources/*
 !sources/.gitkeep
+
+# Ignore the built executables
 executables/*
 !executables/.gitkeep
 
+# Cache of Python 3
 *.pyc
 
+# Visual Studio Code
 .vscode
