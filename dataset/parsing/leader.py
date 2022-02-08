@@ -2,12 +2,14 @@ import typing
 from enum import Enum
 
 from .parsers import BaseParser, CTestSuiteParser, DummyTestSuiteParser
+from .parsers import CNistJulietParser
 
 
 class AvailableTestSuites(Enum):
     """Enumeration for storing the implemented parsers for test suites"""
     DUMMY_TEST_SUITE = DummyTestSuiteParser
     C_TEST_SUITE = CTestSuiteParser
+    JULIET = CNistJulietParser
 
 
 class Leader:

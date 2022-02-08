@@ -1,9 +1,8 @@
 import abc
-import glob
 import os
 import typing
 
-from modules.dataset_worker import DatasetWorker
+from dataset.dataset_worker import DatasetWorker
 from ...configuration import Configuration
 
 COMMAND_SUPRESS_OUTPUT = " >/dev/null 2>&1"
@@ -16,13 +15,18 @@ class SourceDetails:
     id: str
     full_filename: str
     cwes: typing.List[int]
+    full_filenames: typing.List[str]
 
-    def __init__(self, id: str, full_filename: str,
-                 cwes: typing.List[int]) -> None:
+    def __init__(self,
+                 id: str,
+                 full_filename: str,
+                 cwes: typing.List[int],
+                 full_filenames: typing.List[str] = None) -> None:
         """Initializes the SourceDetails instance."""
         self.id = id
         self.full_filename = full_filename
         self.cwes = cwes
+        self.full_filenames = full_filenames
 
 
 class BaseParser(abc.ABC):
@@ -65,35 +69,42 @@ class BaseParser(abc.ABC):
         """
         raise NotImplementedError()
 
+    @abc.abstractmethod
+    def _generate_gcc_command(
+            self,
+            source_id,
+            additonal_compile_flags: typing.List[str] = [],
+            additional_link_flags: typing.List[str] = []) -> str:
+        """Get the gcc_command string needed to preprocess the cuurrent source
+
+        Args:
+            source_id (_type_): id of the current test case
+            additonal_compile_flags (typing.List[str], optional): User-provided
+                compile flags. Defaults to [].
+            additional_link_flag (typing.List[str], optional): User-provided
+                link flags. Defaults to [].
+
+        Raises:
+            NotImplementedError: Method to be implemented in the child classes
+
+        Returns:
+            string: Returns the command string to be executed to preprocess
+                the current source
+        """
+
+        raise NotImplementedError()
+
+    @abc.abstractmethod
     def preprocess(self) -> None:
-        """Preprocess the sources from the current test suite."""
-        sources = self._get_all_sources()
-        for source in sources:
-            # Create the source full ID (from the name of the dataset and the
-            # ID of the source)
-            full_source_id = self._test_case_name + "_" + str(source.id)
+        """Preprocess the sources from the current test suite.
+        
+        Raises:
+            NotImplementedError: Method to be implemented in the chilc classes
+        
+        Returns: None, has no return value
+        """
 
-            destination_path = os.path.join(Configuration.MAIN_DATASET_SOURCES,
-                                            full_source_id)
-            if not os.path.isdir(destination_path):
-                # Create the destination folder
-                os.mkdir(destination_path)
-
-                # Add a new entry in the dataset
-                self._dataset_worker.add_new_source(full_source_id,
-                                                    source.cwes,
-                                                    self._test_case_name)
-
-            # Preprocess
-            source_filename = os.path.basename(source.full_filename)
-            source_folder = os.path.dirname(source.full_filename)
-            destination_file = os.path.join(destination_path, source_filename)
-            gcc_command = GCC_PREPROCESS_COMMAND.format(
-                source.full_filename, source_folder, destination_file)
-            os.system(gcc_command)
-
-        # Dump the dataset
-        self._dataset_worker.dump()
+        raise NotImplementedError()
 
     def build(self,
               additonal_compile_flags: typing.List[str] = [],
@@ -118,22 +129,10 @@ class BaseParser(abc.ABC):
         built_count = 0
         for source_id in sources_ids:
 
-            # Build
-            source_path = os.path.join(Configuration.MAIN_DATASET_SOURCES,
-                                       source_id)
-            destination_file = os.path.join(
-                Configuration.MAIN_DATASET_EXECUTABLES,
-                source_id + Configuration.ELF_EXTENSION)
-            sources = " ".join(glob.iglob(source_path + "**/*.c"))
-            compile_flags = self._compile_flags + (
-                additonal_compile_flags if additonal_compile_flags else [])
-            compile_flags = " ".join(compile_flags)
-            link_flags = self._link_flags + (additional_link_flags
-                                             if additional_link_flags else [])
-            link_flags = " ".join(link_flags)
-            gcc_command = GCC_BUILD_COMMAND.format(compile_flags, sources,
-                                                   link_flags,
-                                                   destination_file)
+            gcc_command = self._generate_gcc_command(source_id,
+                                                     additonal_compile_flags,
+                                                     additional_link_flags)
+
             ret_val = os.system(gcc_command)
 
             # Mark as built

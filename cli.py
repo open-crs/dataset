@@ -5,9 +5,9 @@ import typing
 import click
 import tabulate
 
-from modules.configuration import Configuration
-from modules.dataset_worker import DatasetWorker
-from modules.parsing.leader import AvailableTestSuites, Leader
+from dataset.configuration import Configuration
+from dataset.dataset_worker import DatasetWorker
+from dataset.parsing.leader import AvailableTestSuites, Leader
 
 TESTSUITES_NAMES = [element.name for element in list(AvailableTestSuites)]
 
