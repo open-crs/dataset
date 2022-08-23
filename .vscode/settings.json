@@ -1,30 +1,35 @@
 {
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": true
-    },
-    "editor.formatOnSave": true,
+    // Basic editing
     "editor.wordWrap": "on",
-    "python.formatting.provider": "black",
-    "python.formatting.blackArgs": [
-        "--preview"
-    ],
     "editor.rulers": [
         88
     ],
-    "python.sortImports.path": "${workspaceFolder}/.venv/bin/isort",
-    "python.sortImports.args": [
-        "--src=${workspaceFolder}"
-    ],
-    "python.linting.lintOnSave": true,
+    // Linting
     "python.linting.pylintEnabled": true,
-    "python.linting.pylintPathe": ".venv/bin/pylint",
+    "python.linting.pylintPath": ".venv/bin/pylint",
     "python.linting.flake8Enabled": true,
     "python.linting.flake8Path": ".venv/bin/flake8",
     "python.linting.flake8Args": [
         "--ignore=ANN101",
         "--max-line-length=88"
     ],
-    "python.pythonPath": ".venv/bin/python",
+    "python.linting.lintOnSave": true,
+    // Formatting
+    "python.formatting.provider": "black",
+    "python.formatting.blackPath": ".venv/bin/black",
+    "python.formatting.blackArgs": [
+        "--preview"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "editor.formatOnSave": true,
+    // Imports sorting
+    "python.sortImports.path": ".venv/bin/isort",
+    "python.sortImports.args": [
+        "--src=${workspaceFolder}"
+    ],
+    // File explorer
     "files.exclude": {
         ".venv": true,
         "**/__pycache__": true,
