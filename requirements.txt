@@ -1,3 +1,0 @@
-tabulate==0.8.9
-pandas==1.2.3
-Click==7.0
