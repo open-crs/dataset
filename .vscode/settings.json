@@ -6,26 +6,19 @@
     ],
     // Linting
     "python.linting.pylintEnabled": true,
-    "python.linting.pylintPath": ".venv/bin/pylint",
+    "python.linting.pylintPath": "${workspaceFolder}/.venv/bin/pylint",
     "python.linting.flake8Enabled": true,
-    "python.linting.flake8Path": ".venv/bin/flake8",
-    "python.linting.flake8Args": [
-        "--ignore=ANN101",
-        "--max-line-length=88"
-    ],
+    "python.linting.flake8Path": "${workspaceFolder}/.venv/bin/flake8",
     "python.linting.lintOnSave": true,
     // Formatting
     "python.formatting.provider": "black",
-    "python.formatting.blackPath": ".venv/bin/black",
-    "python.formatting.blackArgs": [
-        "--preview"
-    ],
+    "python.formatting.blackPath": "${workspaceFolder}/.venv/bin/black",
     "editor.codeActionsOnSave": {
         "source.organizeImports": true
     },
     "editor.formatOnSave": true,
     // Imports sorting
-    "python.sortImports.path": ".venv/bin/isort",
+    "python.sortImports.path": "${workspaceFolder}/.venv/bin/isort",
     "python.sortImports.args": [
         "--src=${workspaceFolder}"
     ],

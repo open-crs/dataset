@@ -24,12 +24,15 @@ pylint = "^2.14.4"
 [tool.poetry.scripts]
 dataset = "dataset.cli:main"
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
 [tool.pylint.MASTER]
 init-hook="import sys; sys.path.append('.')"
 
 [tool.pylint.MESSAGES_CONTROL]
-disable="missing-function-docstring, missing-class-docstring"
+disable="missing-function-docstring, missing-class-docstring, missing-module-docstring"
+
+[tool.flake8]
+extend-ignore = "ANN101,"
+
+[tool.black]
+line-length = 79
+preview = true
