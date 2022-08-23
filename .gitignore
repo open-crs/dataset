@@ -1,13 +1,19 @@
-# Ignore the preprocessed sources
-sources/*
-!sources/.gitkeep
+# Preprocessed sources
 
-# Ignore the built executables
-executables/*
-!executables/.gitkeep
+/sources/*
+!/sources/.gitkeep
 
-# Cache of Python 3
+# Built executables
+
+/executables/*
+!/executables/.gitkeep
+
+# Poetry
+
+/.venv
+
+# Python 3
+
+__pycache__
 *.pyc
-
-# Visual Studio Code
-.vscode
+/poetry.lock
