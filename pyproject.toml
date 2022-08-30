@@ -5,11 +5,8 @@ authors = ["OpenCRS"]
 version = "0.1.0"
 
 [tool.poetry.dependencies]
-click = "^8.1.3"
-docker = "^5.0.3"
 pandas= "1.2.3"
 pycparser = "^2.21"
-pyelftools = "^0.28"
 python = "^3.9"
 rich = "^12.5.1"
 cwe = "^1.6"
