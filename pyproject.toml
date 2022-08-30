@@ -32,6 +32,7 @@ disable="missing-function-docstring, missing-class-docstring, missing-module-doc
 
 [tool.flake8]
 extend-ignore = "ANN101,"
+max-line-length=88
 per-file-ignores = """
     ./**/__init__.py: F401
 """
