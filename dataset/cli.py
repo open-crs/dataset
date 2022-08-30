@@ -3,73 +3,103 @@
 import typing
 
 import click
-import tabulate
+import cwe as cwelib
+from rich import print  # pylint: disable=redefined-builtin
+from rich.table import Table
 
-from dataset.configuration import Configuration
-from dataset.dataset_worker import DatasetWorker
-from dataset.parsing.leader import AvailableTestSuites, Leader
+from dataset import Dataset
+from dataset.datasets_parser import AvailableTestSuites, Parser
+from dataset.executable import Executable
 
 TESTSUITES_NAMES = [element.name for element in list(AvailableTestSuites)]
 
 
 @click.group("process")
-@click.pass_context
-def process(ctx: click.Context):
-    """A script for building and filtering datasets of vulnerable programs"""
-    pass
+def process() -> None:
+    """Builds and filters datasets of vulnerable programs"""
 
 
-@process.command("build", help="Build a test suite")
-@click.option("--testsuite",
-              type=click.Choice(TESTSUITES_NAMES, case_sensitive=True),
-              required=True)
+@process.command("build", help="Builds a test suite.")
+@click.option(
+    "--testsuite",
+    type=click.Choice(TESTSUITES_NAMES, case_sensitive=True),
+    required=True,
+)
 @click.option("--compile-flags", type=str)
 @click.option("--link-flags", type=str)
 @click.option("--cwe", multiple=True, type=int)
-@click.pass_context
-def build(ctx: click.Context,
-          testsuite: str,
-          compile_flags: str = None,
-          link_flags: str = None,
-          cwe: typing.List[str] = []):
-    """Build specific sources from a test suite, with some given flags.
+def build(  # pylint: disable=dangerous-default-value
+    testsuite: str,
+    compile_flags: str = None,
+    link_flags: str = None,
+    cwe: typing.List[str] = [],
+) -> None:
+    parser = Parser()
+    parser.add_testsuite(AvailableTestSuites[testsuite])
 
-    Args:
-        ctx (click.Context): Click's context
-        testsuite (str): Test suite to build
-        compile_flags (str, optional): Compile flags. Defaults to None.
-        link_flags (str, optional): Link flags. Defaults to None.
-        cwe (typing.List[str], optional): CWEs that the built sources needs to
-            be vulnerable. Defaults to [].
-    """
-    # Transform the strings resulted from options into arrays
-    if compile_flags:
-        compile_flags = compile_flags.split(" ")
-    if link_flags:
-        link_flags = link_flags.split(" ")
+    compile_flags = split_flags(compile_flags)
+    link_flags = split_flags(link_flags)
+    count = parser.preprocess_and_build(compile_flags, link_flags, cwe)
 
-    # Create the leader and run with the given test suite
-    leader = Leader()
-    leader.add_testsuite(AvailableTestSuites[testsuite])
-    count = leader.preprocess_and_build(compile_flags, link_flags, cwe)
-
-    # Log
-    print(f"[+] Successfully built {count} source(s).")
+    print(f":white_check_mark: Successfully built {count} sources.")
 
 
-@process.command("show", help="Show the sources in the dataset")
-@click.pass_context
-def show(ctx: click.Context):
-    print(f"[+] The information about the dataset's sources are:\n")
+def split_flags(flags: str) -> typing.List[str]:
+    if flags:
+        return flags.split(" ")
+    else:
+        return None
 
-    worker = DatasetWorker(Configuration.DATASET_NAME)
-    sources = worker.get_sources()
 
-    print(tabulate.tabulate(sources))
+@process.command("get", help="Gets the executables in the whole dataset.")
+def show() -> None:
+    print(":white_check_mark: The available executables are:\n")
+
+    sources = Dataset().get_available_executables()
+    sources_table = build_sources_table(sources)
+
+    print(sources_table)
+
+
+def build_sources_table(sources: typing.List[Executable]) -> Table:
+    table = Table()
+
+    table.add_column("ID")
+    table.add_column("CWEs")
+    table.add_column("Parent Database")
+    table.add_column("Full Path")
+
+    for source in sources:
+        cwes = stringifies_cwes(source.cwes)
+
+        table_row = [
+            str(source.identifier),
+            cwes,
+            source.parent_dataset,
+            source.full_path,
+        ]
+        table.add_row(*table_row)
+
+    return table
+
+
+def stringifies_cwes(cwes: typing.List[int]) -> str:
+    cwes = translate_cwes_to_descriptions(cwes)
+
+    return ", ".join(cwes)
+
+
+def translate_cwes_to_descriptions(cwes: typing.List[int]) -> typing.List[str]:
+    cwe_database = cwelib.Database()
+
+    for current_cwe in cwes:
+        if cwe_object := cwe_database.get(current_cwe):
+            yield cwe_object.name
+        else:
+            continue
 
 
 def main() -> None:
-    """Main function"""
     process(prog_name="process")
 
 

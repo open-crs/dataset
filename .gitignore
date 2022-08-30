@@ -1,3 +1,12 @@
+# Raw datasets
+
+/raw_testsuites/*
+!/raw_testsuites/toy_test_suite
+
+# Vulnerables executables CSV
+
+/vulnerables.csv
+
 # Preprocessed sources
 
 /sources/*

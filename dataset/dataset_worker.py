@@ -2,95 +2,101 @@ import typing
 
 import pandas
 
-from .configuration import Configuration
+from dataset.configuration import Configuration
+from dataset.executable import Executable
 
 
 class DatasetWorker:
-    """Class for working with the dataset of vulnerable programs"""
     _filename: str = None
     _dataset: str = None
 
     def __init__(self, filename: str) -> None:
-        """Initializes a DatasetWorker instance.
-
-        Args:
-            filename (str): Name of the CSV dataset
-        """
         self._filename = filename
-
         self._dataset = pandas.read_csv(self._filename)
 
     def __del__(self) -> None:
         """Destroys a DatasetWorker instance."""
-        self.dump()
+        self.dump_to_file()
 
-    def add_new_source(self, name: str, cwes: typing.List[int],
-                       parent_dataset: str) -> None:
-        """Adds a new source into the dataset
+    def add_new_source(
+        self, name: str, cwes: typing.List[int], parent_dataset: str
+    ) -> None:
+        cwes = self.__stringifies_cwes(cwes)
 
-        Args:
-            name (str): Name (identifier) of the sources
-            cwes (typing.List[int]): CWEs that the source includes
-            parent_dataset (str): Parent datasets
-        """
-        # Concatenate the CWEs
-        cwes = Configuration.CWES_SEPARATOR.join([str(cwe) for cwe in cwes])
+        self._dataset.loc[len(self._dataset.index)] = [
+            name,
+            cwes,
+            parent_dataset,
+            False,
+        ]
 
-        # Insert a new column into the dataframe
-        self._dataset.loc[len(
-            self._dataset.index)] = [name, cwes, parent_dataset, False]
+    def __stringifies_cwes(self, cwes: typing.List[str]) -> str:
+        return Configuration.CWES_SEPARATOR.join([str(cwe) for cwe in cwes])
 
     def mark_source_as_built(self, name: str) -> None:
-        # Change the boolean indicating the status
         self._dataset.loc[self._dataset.name == name, "is_built"] = True
 
-    def dump(self) -> None:
-        """Dumps the dataset from memory to disk."""
+    def dump_to_file(self) -> None:
         self._dataset.to_csv(self._filename, index=False)
 
-    def get_sources(self,
-                    dataset: str = None,
-                    cwes: typing.List[int] = None,
-                    is_built: bool = None,
-                    only_names: bool = False) -> list:
-        """Gets specific sources from dataset.
-
-        Args:
-            dataset (str, optional): Parent dataset. Defaults to None.
-            cwes (typing.List[int], optional): CWEs that the sources include.
-                Defaults to None.
-            is_built (bool, optional): Boolean indicating if the sources are
-                compiled (an executable already exists). Defaults to None.
-            only_names (bool, optional): Boolean indicating if only the names
-                should be returned. Defaults to False, meaning that the function
-                will return a panda's DataFrame.
-
-        Returns:
-            list: List with sources (or only their names)
-        """
-        # Filter the dataset
-        sources = []
+    def get_entries_ids(
+        self,
+        dataset: str = None,
+        cwes: typing.List[int] = None,
+        is_built: bool = None,
+    ) -> list:
         for _, row in self._dataset.iterrows():
-            # Check the parent dataset
-            if dataset and row.parent_dataset != dataset:
+            if self.__is_source_skipped_by_filters(
+                row, dataset, cwes, is_built
+            ):
                 continue
 
-            # Check if the sources are built
-            if is_built != None and row.is_built != is_built:
+            yield row["name"]
+
+    def get_available_executables(
+        self, dataset: str = None, cwes: typing.List[int] = None
+    ) -> list:
+        for _, row in self._dataset.iterrows():
+            if self.__is_source_skipped_by_filters(row, dataset, cwes, True):
                 continue
 
-            # Check the current CWEs
-            if cwes:
-                current_cwes = str(row.cwes).split(
-                    Configuration.CWES_SEPARATOR)
-                current_cwes = [int(element) for element in current_cwes]
-                if (len(set(current_cwes).intersection(set(cwes))) == 0):
-                    continue
+            details = row.tolist()[:-1]
 
-            # If the above checks passed, then return the entry's name
-            if only_names:
-                sources.append(row["name"])
-            else:
-                sources.append(row.tolist())
+            yield Executable(*details)
 
-        return sources
+    def __is_source_skipped_by_filters(
+        self,
+        source: list,
+        dataset: str = None,
+        cwes: typing.List[int] = None,
+        is_built: bool = None,
+    ) -> bool:
+        return (
+            self.__is_source_skipped_by_dataset_filter(source, dataset)
+            or self.__is_source_skipped_by_status_filter(source, is_built)
+            or self.__is_source_skipped_by_cwes_filter(source, cwes)
+        )
+
+    def __is_source_skipped_by_dataset_filter(
+        self, source: list, dataset: str
+    ) -> bool:
+        return dataset and source.parent_dataset != dataset
+
+    def __is_source_skipped_by_status_filter(
+        self, source: list, is_built: bool
+    ) -> bool:
+        return is_built is not None and source.is_built != is_built
+
+    def __is_source_skipped_by_cwes_filter(
+        self, source: list, cwes: typing.List[int]
+    ) -> bool:
+        if not cwes:
+            return False
+
+        current_cwes = str(source.cwes).split(Configuration.CWES_SEPARATOR)
+        current_cwes = [int(element) for element in current_cwes]
+
+        if len(set(current_cwes).intersection(set(cwes))) == 0:
+            return True
+
+        return False

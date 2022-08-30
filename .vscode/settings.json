@@ -8,7 +8,7 @@
     "python.linting.pylintEnabled": true,
     "python.linting.pylintPath": "${workspaceFolder}/.venv/bin/pylint",
     "python.linting.flake8Enabled": true,
-    "python.linting.flake8Path": "${workspaceFolder}/.venv/bin/flake8",
+    "python.linting.flake8Path": "${workspaceFolder}/.venv/bin/pflake8",
     "python.linting.lintOnSave": true,
     // Formatting
     "python.formatting.provider": "black",
@@ -22,10 +22,12 @@
     "python.sortImports.args": [
         "--src=${workspaceFolder}"
     ],
+    // TOC generation
+    "markdown.extension.toc.levels": "2..6",
     // File explorer
     "files.exclude": {
         ".venv": true,
         "**/__pycache__": true,
         "poetry.lock": true
-    }
+    },
 }
