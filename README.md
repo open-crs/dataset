@@ -7,7 +7,7 @@
 - [How It Works](#how-it-works)
 - [Setup](#setup)
 - [Usage](#usage)
-  - [As a Tool](#as-a-tool)
+  - [As a CLI Tool](#as-a-cli-tool)
     - [Testsuite Build](#testsuite-build)
     - [Executables Listing](#executables-listing)
     - [Help](#help)
@@ -17,11 +17,11 @@
 
 ## Description
 
-**`dataset`** is the CRS module that compiles and manages the vulnerable programs which will be analyzed by the CRS.
+`dataset` is the CRS module that compiles and manages the vulnerable programs which will be analyzed by the CRS.
 
-The **supported test suites** are the following:
-- **NIST's Juliet**;
-- **NIST's C Test Suite**;
+The supported test suites are the following:
+- NIST's Juliet;
+- NIST's C Test Suite;
 - A toy dataset.
 
 ### Limitations
@@ -49,7 +49,7 @@ The module does the following steps for each test suite that needs to be built:
 
 ## Usage
 
-### As a Tool
+### As a CLI Tool
 
 #### Testsuite Build
 
