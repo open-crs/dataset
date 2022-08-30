@@ -8,7 +8,7 @@
 - [Setup](#setup)
 - [Usage](#usage)
   - [As a CLI Tool](#as-a-cli-tool)
-    - [Testsuite Build](#testsuite-build)
+    - [Test Suite Build](#test-suite-build)
     - [Executables Listing](#executables-listing)
     - [Help](#help)
   - [As a Python Module](#as-a-python-module)
@@ -26,8 +26,8 @@ The supported test suites are the following:
 
 ### Limitations
 
-- ELF format due to `gcc` compilation
-- 32-bit architecture
+- ELF format
+- x86 architecture
 
 ## How It Works
 
@@ -40,18 +40,16 @@ The module does the following steps for each test suite that needs to be built:
 6. Compiling the preprocessed sources with the compile and link flags from multiple sources (module's ones and user-provided)
 7. Writing the executables into the `executables` folder from the root of the repository.
 
-
-
 ## Setup
 
 1. Ensure that the repository's submodules (which are the test suites) are downloaded too. If you want to clone the repository, use the flag `--recurse-submodules` to download them too.
-2. Install the required Python 3 packages via `poetry install`.
+2. Install the required Python 3 packages via `poetry install --no-dev`.
 
 ## Usage
 
 ### As a CLI Tool
 
-#### Testsuite Build
+#### Test Suite Build
 
 ```
 ➜ poetry run dataset build --testsuite TOY_TEST_SUITE
