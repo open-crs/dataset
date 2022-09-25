@@ -5,6 +5,6 @@ from dataset.executable import Executable
 
 class Dataset:
     def get_available_executables(self) -> str:
-        worker = DatasetWorker(Configuration.DATASET_NAME)
+        worker = DatasetWorker(Configuration.DatasetCreation.DATASET_NAME)
 
         return worker.get_available_executables()

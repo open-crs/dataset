@@ -77,7 +77,7 @@ The module does the following steps for each test suite that needs to be built:
 
 ```
 ➜ poetry run dataset
-Usage: process [OPTIONS] COMMAND [ARGS]...
+Usage: dataset [OPTIONS] COMMAND [ARGS]...
 
   Builds and filters datasets of vulnerable programs
 
@@ -86,7 +86,7 @@ Options:
 
 Commands:
   build  Builds a test suite.
-  show   Show the sources in the dataset
+  show   Gets the executables in the whole dataset.
 ```
 
 ### As a Python Module

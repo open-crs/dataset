@@ -26,8 +26,10 @@ class Executable:
             self.cwes = cwes
 
     def __get_full_path(self) -> None:
-        filename_with_ext = self.identifier + Configuration.ELF_EXTENSION
+        filename_with_ext = (
+            self.identifier + Configuration.Assets.ELF_EXTENSION
+        )
 
         return os.path.join(
-            Configuration.MAIN_DATASET_EXECUTABLES, filename_with_ext
+            Configuration.Assets.MAIN_DATASET_EXECUTABLES, filename_with_ext
         )

@@ -19,7 +19,7 @@ COMPILE_FLAGS = ["-w", "-O0"]
 
 CWE_REGEX = r"CWE-([0-9]+)"
 W32_REGEX = r"w32"
-MAIN_DATASET_HEADERS = Configuration.MAIN_DATASET_SOURCES + "nist_lib/"
+MAIN_DATASET_HEADERS = Configuration.Assets.MAIN_DATASET_SOURCES + "nist_lib/"
 
 DATASET_MANIFEST = DATASET_FOLDER + "manifest.xml"
 
@@ -107,7 +107,7 @@ class CNistJulietParser(BaseParser):
 
             # Create the destination folder
             destination_path = os.path.join(
-                Configuration.MAIN_DATASET_SOURCES, full_identifier
+                Configuration.Assets.MAIN_DATASET_SOURCES, full_identifier
             )
             if not os.path.isdir(destination_path):
                 os.mkdir(destination_path)
@@ -222,11 +222,11 @@ class CNistJulietParser(BaseParser):
         # Build
 
         source_path = os.path.join(
-            Configuration.MAIN_DATASET_SOURCES, identifier
+            Configuration.Assets.MAIN_DATASET_SOURCES, identifier
         )
         destination_file = os.path.join(
-            Configuration.MAIN_DATASET_EXECUTABLES,
-            identifier + Configuration.ELF_EXTENSION,
+            Configuration.Assets.MAIN_DATASET_EXECUTABLES,
+            identifier + Configuration.Assets.ELF_EXTENSION,
         )
         sources = " ".join(glob.iglob(source_path + "/**"))
 

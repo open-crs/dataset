@@ -9,7 +9,7 @@ from dataset.source import Source
 COMMAND_SUPRESS_OUTPUT = " >/dev/null 2>&1"
 GCC_PREPROCESS_COMMAND = "gcc -E {} -I {} -o {}" + COMMAND_SUPRESS_OUTPUT
 GCC_BUILD_COMMAND = "gcc {} {} {} -o {}" + COMMAND_SUPRESS_OUTPUT
-DATASET_NAME = Configuration.DATASET_NAME
+DATASET_NAME = Configuration.DatasetCreation.DATASET_NAME
 
 
 class BaseParser(abc.ABC):

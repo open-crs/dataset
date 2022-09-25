@@ -14,12 +14,12 @@ from dataset.executable import Executable
 TESTSUITES_NAMES = [element.name for element in list(AvailableTestSuites)]
 
 
-@click.group("process")
-def process() -> None:
+@click.group("cli")
+def cli() -> None:
     """Builds and filters datasets of vulnerable programs"""
 
 
-@process.command("build", help="Builds a test suite.")
+@cli.command("build", help="Builds a test suite.")
 @click.option(
     "--testsuite",
     type=click.Choice(TESTSUITES_NAMES, case_sensitive=True),
@@ -51,7 +51,7 @@ def split_flags(flags: str) -> typing.List[str]:
         return None
 
 
-@process.command("get", help="Gets the executables in the whole dataset.")
+@cli.command("get", help="Gets the executables in the whole dataset.")
 def show() -> None:
     print(":white_check_mark: The available executables are:\n")
 
@@ -100,7 +100,7 @@ def translate_cwes_to_descriptions(cwes: typing.List[int]) -> typing.List[str]:
 
 
 def main() -> None:
-    process(prog_name="process")
+    cli(prog_name="dataset")
 
 
 if __name__ == "__main__":

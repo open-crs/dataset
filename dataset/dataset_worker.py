@@ -31,7 +31,9 @@ class DatasetWorker:
         ]
 
     def __stringifies_cwes(self, cwes: typing.List[str]) -> str:
-        return Configuration.CWES_SEPARATOR.join([str(cwe) for cwe in cwes])
+        return Configuration.DatasetCreation.CWES_SEPARATOR.join(
+            [str(cwe) for cwe in cwes]
+        )
 
     def mark_source_as_built(self, name: str) -> None:
         self._dataset.loc[self._dataset.name == name, "is_built"] = True
@@ -93,7 +95,9 @@ class DatasetWorker:
         if not cwes:
             return False
 
-        current_cwes = str(source.cwes).split(Configuration.CWES_SEPARATOR)
+        current_cwes = str(source.cwes).split(
+            Configuration.DatasetCreation.CWES_SEPARATOR
+        )
         current_cwes = [int(element) for element in current_cwes]
 
         if len(set(current_cwes).intersection(set(cwes))) == 0:

@@ -70,7 +70,7 @@ class CTestSuiteParser(BaseParser):
             )
 
             destination_path = os.path.join(
-                Configuration.MAIN_DATASET_SOURCES, full_identifier
+                Configuration.Assets.MAIN_DATASET_SOURCES, full_identifier
             )
             if not os.path.isdir(destination_path):
                 os.mkdir(destination_path)
@@ -98,11 +98,11 @@ class CTestSuiteParser(BaseParser):
         additional_link_flags: typing.List[str] = None,
     ) -> str:
         source_path = os.path.join(
-            Configuration.MAIN_DATASET_SOURCES, identifier
+            Configuration.Assets.MAIN_DATASET_SOURCES, identifier
         )
         destination_file = os.path.join(
-            Configuration.MAIN_DATASET_EXECUTABLES,
-            identifier + Configuration.ELF_EXTENSION,
+            Configuration.Assets.MAIN_DATASET_EXECUTABLES,
+            identifier + Configuration.Assets.ELF_EXTENSION,
         )
         sources = " ".join(glob.iglob(source_path + "**/*.c"))
         compile_flags = self.compile_flags + (

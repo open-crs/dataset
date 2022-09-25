@@ -82,7 +82,7 @@ class ToyTestSuiteParser(BaseParser):
         full_identifier = self.__get_source_full_id(source.identifier)
 
         return os.path.join(
-            Configuration.MAIN_DATASET_SOURCES, full_identifier
+            Configuration.Assets.MAIN_DATASET_SOURCES, full_identifier
         )
 
     def __get_source_full_id(self, identifier: int) -> None:
@@ -95,11 +95,11 @@ class ToyTestSuiteParser(BaseParser):
         additional_link_flags: typing.List[str] = None,
     ) -> str:
         source_path = os.path.join(
-            Configuration.MAIN_DATASET_SOURCES, identifier
+            Configuration.Assets.MAIN_DATASET_SOURCES, identifier
         )
         destination_file = os.path.join(
-            Configuration.MAIN_DATASET_EXECUTABLES,
-            identifier + Configuration.ELF_EXTENSION,
+            Configuration.Assets.MAIN_DATASET_EXECUTABLES,
+            identifier + Configuration.Assets.ELF_EXTENSION,
         )
         sources = " ".join(glob.iglob(source_path + "**/*.c"))
         compile_flags = self.compile_flags + (
