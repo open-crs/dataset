@@ -11,6 +11,8 @@ python = "^3.9"
 rich = "^12.5.1"
 cwe = "^1.6"
 click = "^8.1.3"
+patchelf = "^0.15.0"
+docker = "^6.0.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"

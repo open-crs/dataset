@@ -40,10 +40,16 @@ The module does the following steps for each test suite that needs to be built:
 6. Compiling the preprocessed sources with the compile and link flags from multiple sources (module's ones and user-provided)
 7. Writing the executables into the `executables` folder from the root of the repository.
 
+All `gcc` operations are performed inside a 32-bit Ubuntu 18.04 container. 
+
 ## Setup
 
 1. Ensure that the repository's submodules (which are the test suites) are downloaded too. If you want to clone the repository, use the flag `--recurse-submodules` to download them too.
 2. Install the required Python 3 packages via `poetry install --no-dev`.
+3. Build the Docker image: `docker build --tag ubuntu_32bit_compilator others/ubuntu_32bit_compilator`.
+4. Ensure the Docker API is accessible by:
+   - Running the module as `root`; or
+   - Changing the Docker socket permissions (unsecure approach) via `chmod 777 /var/run/docker.sock`.
 
 ## Usage
 

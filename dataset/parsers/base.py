@@ -1,7 +1,7 @@
 import abc
-import os
 import typing
 
+from dataset.compiler import Compiler
 from dataset.configuration import Configuration
 from dataset.dataset_worker import DatasetWorker
 from dataset.source import Source
@@ -28,6 +28,7 @@ class BaseParser(abc.ABC):
         self.compile_flags = compile_flags if compile_flags else []
         self.link_flags = link_flags if link_flags else []
         self.dataset_worker = DatasetWorker(DATASET_NAME)
+        self.compiler = Compiler()
 
     @abc.abstractmethod
     def _get_all_sources(self) -> typing.List[Source]:
@@ -41,6 +42,9 @@ class BaseParser(abc.ABC):
         additional_link_flags: typing.List[str] = None,
     ) -> str:
         raise NotImplementedError()
+
+    def _execute_command(self, command: str) -> int:
+        return self.compiler.exec_compiler_command(command)
 
     @abc.abstractmethod
     def preprocess(self) -> None:
@@ -62,7 +66,7 @@ class BaseParser(abc.ABC):
                 identifier, additonal_compile_flags, additional_link_flags
             )
 
-            ret_val = os.system(gcc_command)
+            ret_val = self._execute_command(gcc_command)
 
             if ret_val == 0:
                 self.dataset_worker.mark_source_as_built(identifier)

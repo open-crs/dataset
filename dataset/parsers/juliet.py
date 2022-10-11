@@ -91,13 +91,13 @@ class CNistJulietParser(BaseParser):
                 MAIN_DATASET_HEADERS,
                 MAIN_DATASET_HEADERS + source_filename,
             )
-            os.system(gcc_command)
+            self._execute_command(gcc_command)
             gcc_command = GPP_PREPROCESS_COMMAND.format(
                 file,
                 MAIN_DATASET_HEADERS,
                 MAIN_DATASET_HEADERS + source_filename + "pp",
             )
-            os.system(gcc_command)
+            self._execute_command(gcc_command)
 
         sources = self._get_all_sources()
         for source in sources:
@@ -143,8 +143,8 @@ class CNistJulietParser(BaseParser):
                             MAIN_DATASET_HEADERS,
                             destination_file,
                         )
-                # print(gcc_command)
-                os.system(gcc_command)
+
+                self._execute_command(gcc_command)
 
             self.dataset_worker.add_new_source(
                 full_identifier, source.cwes, DATASET_NAME

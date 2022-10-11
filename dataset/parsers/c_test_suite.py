@@ -87,7 +87,7 @@ class CTestSuiteParser(BaseParser):
                 include_dir=source_folder,
                 output_file=destination_file,
             )
-            os.system(gcc_command)
+            self._execute_command(gcc_command)
 
         self.dataset_worker.dump_to_file()
 
