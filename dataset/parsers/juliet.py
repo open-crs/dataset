@@ -26,17 +26,15 @@ DATASET_MANIFEST = DATASET_FOLDER + "manifest.xml"
 COMMAND_SUPRESS_OUTPUT = " >/dev/null 2>&1"
 GCC_PREPROCESS_COMMAND = (
     "gcc -E {} -O0 -DOMITGOOD -DINCLUDEMAIN -I{}             -o {}"
-    + COMMAND_SUPRESS_OUTPUT
 )
 GPP_PREPROCESS_COMMAND = (
     "g++ -E {} -O0 -DOMITGOOD -DINCLUDEMAIN -I{}              -o {}"
-    + COMMAND_SUPRESS_OUTPUT
 )
 GCC_BUILD_COMMAND = (
-    "gcc -x  c  {} {} {} -o {} -lpthread -lm " + COMMAND_SUPRESS_OUTPUT
+    "gcc -x  c  {} {} {} -o {} -lpthread -lm "
 )
 GPP_BUILD_COMMAND = (
-    "g++ -x c++ {} {} {} -o {} -lpthread -lm " + COMMAND_SUPRESS_OUTPUT
+    "g++ -x c++ {} {} {} -o {} -lpthread -lm "
 )
 
 ADITIOAL_GCC_SOURCES = (
@@ -77,7 +75,6 @@ class CNistJulietParser(BaseParser):
 
     def preprocess(self) -> None:
         """Preprocess the sources from the current test suite."""
-
         if not os.path.isdir(MAIN_DATASET_HEADERS):
             os.mkdir(MAIN_DATASET_HEADERS)
         for file in glob.iglob(DATASET_HEADER_FOLDER + "*.h"):
@@ -99,8 +96,7 @@ class CNistJulietParser(BaseParser):
             )
             self._execute_command(gcc_command)
 
-        sources = self._get_all_sources()
-        for source in sources:
+        for source in self._get_all_sources():
             # Create the source full ID (from the name of the dataset and the
             # ID of the source)
             full_identifier = DATASET_NAME + "_" + str(source.identifier)
@@ -144,7 +140,7 @@ class CNistJulietParser(BaseParser):
                             destination_file,
                         )
 
-                self._execute_command(gcc_command)
+                    self._execute_command(gcc_command)
 
             self.dataset_worker.add_new_source(
                 full_identifier, source.cwes, DATASET_NAME
@@ -153,7 +149,7 @@ class CNistJulietParser(BaseParser):
         # Dump the dataset
         self.dataset_worker.dump_to_file()
 
-    def _get_all_sources(self) -> typing.List[Source]:
+    def _get_all_sources(self) -> typing.Generator[Source, None, None]:
         # Parse the manifest to get the CWEs
 
         global SOURCE_LIMIT
@@ -189,12 +185,13 @@ class CNistJulietParser(BaseParser):
 
                 self._current_id += 1
                 source = Source(identifier, "", cwes[identifier], filePaths)
-                sources.append(source)
+                
+                yield source
+
                 if identifier == self._source_limit:
-                    return sources
+                    break
             except Exception as e:
                 pass
-        return sources
 
     def _generate_gcc_command(
         self,
