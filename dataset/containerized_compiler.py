@@ -48,11 +48,17 @@ class ContainerizedCompiler:
 
     def exec_compiler_command(self, command: str) -> int:
         exit_code, output = self.__container.exec_run(
-            command, workdir=Configuration.ContainerizedCompiler.CONTAINER_WORKING_DIRECTORY
+            command,
+            workdir=Configuration.ContainerizedCompiler.CONTAINER_WORKING_DIRECTORY,
         )
 
-
-        logging.log(logging.INFO, f"The command \"{command}\" was executed in container, having the exit code {exit_code}.")
+        logging.log(
+            logging.INFO,
+            (
+                f'The command "{command}" was executed in container, having'
+                f" the exit code {exit_code}."
+            ),
+        )
         if output:
             output = output.decode("utf-8")
             logging.log(logging.INFO, f"The output is:\n\n{output}")

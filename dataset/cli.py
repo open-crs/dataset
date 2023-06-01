@@ -32,9 +32,9 @@ def cli() -> None:
 )
 @click.option("--compile-flags", type=str)
 @click.option("--link-flags", type=str)
-@click.option('--rebuild', is_flag=True, default=False)
+@click.option("--rebuild", is_flag=True, default=False)
 @click.option("--cwe", multiple=True, type=int)
-@click.option('--verbose', is_flag=True, default=False)
+@click.option("--verbose", is_flag=True, default=False)
 @click.option("--log-filename", type=str)
 def build(  # pylint: disable=dangerous-default-value
     testsuite: str,
@@ -43,16 +43,16 @@ def build(  # pylint: disable=dangerous-default-value
     rebuild: str = False,
     cwe: typing.List[str] = [],
     verbose: bool = False,
-    log_filename: str = None
+    log_filename: str = None,
 ) -> None:
     if verbose and log_filename is not None:
         logging.basicConfig(
             filename=log_filename,
-            filemode='w',
-            format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-            datefmt='%H:%M:%S',
+            filemode="w",
+            format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
+            datefmt="%H:%M:%S",
             level=logging.DEBUG,
-            force=True
+            force=True,
         )
     elif not verbose:
         logging.getLogger().setLevel(logging.WARNING)
@@ -62,7 +62,9 @@ def build(  # pylint: disable=dangerous-default-value
 
     compile_flags = split_flags(compile_flags)
     link_flags = split_flags(link_flags)
-    count = manager.preprocess_and_build(compile_flags, link_flags, rebuild, cwe)
+    count = manager.preprocess_and_build(
+        compile_flags, link_flags, rebuild, cwe
+    )
 
     print(f"Successfully built {count} executables.")
 
@@ -104,6 +106,7 @@ def build_sources_table(sources: typing.List[Executable]) -> Table:
         table.add_row(*table_row)
 
     return table
+
 
 def stringifies_cwes(cwes: typing.List[int]) -> str:
     cwes = translate_cwes_to_descriptions(cwes)

@@ -87,4 +87,6 @@ class BaseParser(abc.ABC):
     ) -> int:
         self.preprocess()
 
-        return self.build(additonal_compile_flags, additional_link_flag, rebuild, cwes)
+        return self.build(
+            additonal_compile_flags, additional_link_flag, rebuild, cwes
+        )

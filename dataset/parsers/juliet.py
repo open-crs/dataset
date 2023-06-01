@@ -30,12 +30,8 @@ GCC_PREPROCESS_COMMAND = (
 GPP_PREPROCESS_COMMAND = (
     "g++ -E {} -O0 -DOMITGOOD -DINCLUDEMAIN -I{}              -o {}"
 )
-GCC_BUILD_COMMAND = (
-    "gcc -x  c  {} {} {} -o {} -lpthread -lm "
-)
-GPP_BUILD_COMMAND = (
-    "g++ -x c++ {} {} {} -o {} -lpthread -lm "
-)
+GCC_BUILD_COMMAND = "gcc -x  c  {} {} {} -o {} -lpthread -lm "
+GPP_BUILD_COMMAND = "g++ -x c++ {} {} {} -o {} -lpthread -lm "
 
 ADITIOAL_GCC_SOURCES = (
     " "
@@ -185,7 +181,7 @@ class CNistJulietParser(BaseParser):
 
                 self._current_id += 1
                 source = Source(identifier, "", cwes[identifier], filePaths)
-                
+
                 yield source
 
                 if identifier == self._source_limit:
