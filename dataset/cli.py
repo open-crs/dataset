@@ -8,8 +8,8 @@ from rich import print  # pylint: disable=redefined-builtin
 from rich.table import Table
 
 from dataset import Dataset
-from dataset.datasets_parser import AvailableTestSuites, Parser
 from dataset.executable import Executable
+from dataset.parsers_manager import AvailableTestSuites, ParsersManager
 
 TESTSUITES_NAMES = [element.name for element in list(AvailableTestSuites)]
 
@@ -34,12 +34,12 @@ def build(  # pylint: disable=dangerous-default-value
     link_flags: str = None,
     cwe: typing.List[str] = [],
 ) -> None:
-    parser = Parser()
-    parser.add_testsuite(AvailableTestSuites[testsuite])
+    manager = ParsersManager()
+    manager.add_testsuite(AvailableTestSuites[testsuite])
 
     compile_flags = split_flags(compile_flags)
     link_flags = split_flags(link_flags)
-    count = parser.preprocess_and_build(compile_flags, link_flags, cwe)
+    count = manager.preprocess_and_build(compile_flags, link_flags, cwe)
 
     print(f":white_check_mark: Successfully built {count} sources.")
 
@@ -81,7 +81,6 @@ def build_sources_table(sources: typing.List[Executable]) -> Table:
         table.add_row(*table_row)
 
     return table
-
 
 def stringifies_cwes(cwes: typing.List[int]) -> str:
     cwes = translate_cwes_to_descriptions(cwes)

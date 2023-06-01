@@ -18,11 +18,9 @@ CWE_REGEX = r"CWE-([0-9]+)"
 COMMAND_SUPRESS_OUTPUT = " >/dev/null 2>&1"
 GCC_PREPROCESS_COMMAND = (
     "gcc -E {source_file} -I {include_dir} -o {output_file}"
-    + COMMAND_SUPRESS_OUTPUT
 )
 GCC_BUILD_COMMAND = (
     "gcc {compile_flags} {source_file} {link_flags} -o {output_file}"
-    + COMMAND_SUPRESS_OUTPUT
 )
 
 

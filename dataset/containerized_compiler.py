@@ -5,7 +5,7 @@ import docker
 from dataset.configuration import Configuration
 
 
-class Compiler:
+class ContainerizedCompiler:
     docker_client: docker.client
 
     def __init__(self) -> None:
@@ -28,7 +28,7 @@ class Compiler:
                 folder,
             )
             container_folder = os.path.join(
-                Configuration.Compiler.CONTAINER_WORKING_DIRECTORY,
+                Configuration.ContainerizedCompiler.CONTAINER_WORKING_DIRECTORY,
                 folder,
             )
 
@@ -38,7 +38,7 @@ class Compiler:
             }
 
         self.__container = self.__docker_client.containers.run(
-            Configuration.Compiler.IMAGE_TAG,
+            Configuration.ContainerizedCompiler.IMAGE_TAG,
             command="tail -f /dev/null",
             detach=True,
             tty=True,
@@ -47,7 +47,7 @@ class Compiler:
 
     def exec_compiler_command(self, command: str) -> int:
         result = self.__container.exec_run(
-            command, workdir=Configuration.Compiler.CONTAINER_WORKING_DIRECTORY
+            command, workdir=Configuration.ContainerizedCompiler.CONTAINER_WORKING_DIRECTORY
         )
 
         return result.exit_code

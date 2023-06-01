@@ -1,14 +1,14 @@
 import abc
 import typing
 
-from dataset.compiler import Compiler
 from dataset.configuration import Configuration
-from dataset.dataset_worker import DatasetWorker
+from dataset.containerized_compiler import ContainerizedCompiler
 from dataset.source import Source
+from dataset.vulnerable_executables_index import VulnerableExecutablesIndex
 
 COMMAND_SUPRESS_OUTPUT = " >/dev/null 2>&1"
-GCC_PREPROCESS_COMMAND = "gcc -E {} -I {} -o {}" + COMMAND_SUPRESS_OUTPUT
-GCC_BUILD_COMMAND = "gcc {} {} {} -o {}" + COMMAND_SUPRESS_OUTPUT
+GCC_PREPROCESS_COMMAND = "gcc -E {} -I {} -o {}"
+GCC_BUILD_COMMAND = "gcc {} {} {} -o {}"
 DATASET_NAME = Configuration.DatasetCreation.DATASET_NAME
 
 
@@ -16,7 +16,7 @@ class BaseParser(abc.ABC):
     test_case_name: str
     compile_flags: typing.List[str]
     link_flags: typing.List[str]
-    dataset_worker: DatasetWorker
+    dataset_worker: VulnerableExecutablesIndex
 
     def __init__(
         self,
@@ -27,8 +27,8 @@ class BaseParser(abc.ABC):
         self.test_case_name = test_case_name
         self.compile_flags = compile_flags if compile_flags else []
         self.link_flags = link_flags if link_flags else []
-        self.dataset_worker = DatasetWorker(DATASET_NAME)
-        self.compiler = Compiler()
+        self.dataset_worker = VulnerableExecutablesIndex(DATASET_NAME)
+        self.compiler = ContainerizedCompiler()
 
     @abc.abstractmethod
     def _get_all_sources(self) -> typing.List[Source]:

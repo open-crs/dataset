@@ -3,7 +3,7 @@ import typing
 from dataset.parsers import AvailableTestSuites, BaseParser
 
 
-class Parser:
+class ParsersManager:
     _parsers: typing.List[BaseParser]
 
     def __init__(self) -> None:

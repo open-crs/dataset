@@ -30,3 +30,7 @@ __pycache__
 # Visual Studio Code symlink
 
 .vscode
+
+# Mac
+
+.DS_Store

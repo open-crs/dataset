@@ -12,6 +12,6 @@ class Configuration:
         CWES_SEPARATOR = ","
         DATASET_NAME = "vulnerables.csv"
 
-    class Compiler:
+    class ContainerizedCompiler:
         IMAGE_TAG = "ubuntu_32bit_compilator"
         CONTAINER_WORKING_DIRECTORY = "/home/docker"

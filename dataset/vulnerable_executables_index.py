@@ -6,7 +6,7 @@ from dataset.configuration import Configuration
 from dataset.executable import Executable
 
 
-class DatasetWorker:
+class VulnerableExecutablesIndex:
     _filename: str = None
     _dataset: str = None
 
@@ -15,7 +15,7 @@ class DatasetWorker:
         self._dataset = pandas.read_csv(self._filename)
 
     def __del__(self) -> None:
-        """Destroys a DatasetWorker instance."""
+        """Destroys a VulnerableExecutablesIndex instance."""
         self.dump_to_file()
 
     def add_new_source(
@@ -57,7 +57,7 @@ class DatasetWorker:
 
     def get_available_executables(
         self, dataset: str = None, cwes: typing.List[int] = None
-    ) -> list:
+    ) -> typing.List[Executable]:
         for _, row in self._dataset.iterrows():
             if self.__is_source_skipped_by_filters(row, dataset, cwes, True):
                 continue
