@@ -1,8 +1,6 @@
 class Configuration:
     class Assets:
-        HOST_WORKING_DIRECTORY = (
-            "/home/iosifache/Documents/Projects/OPENCRS/Repositories/dataset"
-        )
+        HOST_WORKING_DIRECTORY = "/opencrs/dataset"
         RAW_TESTSUITES = "raw_testsuites/"
         MAIN_DATASET_SOURCES = "sources/"
         ELF_EXTENSION = ".elf"
