@@ -41,7 +41,7 @@ def build(  # pylint: disable=dangerous-default-value
     link_flags = split_flags(link_flags)
     count = manager.preprocess_and_build(compile_flags, link_flags, cwe)
 
-    print(f":white_check_mark: Successfully built {count} sources.")
+    print(f"Successfully built {count} sources.")
 
 
 def split_flags(flags: str) -> typing.List[str]:
@@ -53,7 +53,7 @@ def split_flags(flags: str) -> typing.List[str]:
 
 @cli.command("get", help="Gets the executables in the whole dataset.")
 def show() -> None:
-    print(":white_check_mark: The available executables are:\n")
+    print("The available executables are:\n")
 
     sources = Dataset().get_available_executables()
     sources_table = build_sources_table(sources)
