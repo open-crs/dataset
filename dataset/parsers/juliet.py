@@ -9,8 +9,6 @@ from dataset.configuration import Configuration
 from dataset.parsers.base import BaseParser
 from dataset.source import Source
 
-SOURCE_LIMIT = 10000
-
 DATASET_NAME = "nist_juliet"
 DATASET_FOLDER = "raw_testsuites/nist_juliet/"
 DATASET_SOURCES_FOLDER = DATASET_FOLDER + "testcases/"
@@ -64,7 +62,6 @@ class DatasetException(Exception):
 
 class CNistJulietParser(BaseParser):
     _current_id: int
-    _source_limit: int
 
     def __init__(self) -> str:
         super().__init__(DATASET_NAME, COMPILE_FLAGS)
@@ -148,9 +145,6 @@ class CNistJulietParser(BaseParser):
     def _get_all_sources(self) -> typing.Generator[Source, None, None]:
         # Parse the manifest to get the CWEs
 
-        global SOURCE_LIMIT
-        self._source_limit = SOURCE_LIMIT
-
         self._current_id = 1
         tree = ET.parse(DATASET_MANIFEST)
         root = tree.getroot()
@@ -183,9 +177,6 @@ class CNistJulietParser(BaseParser):
                 source = Source(identifier, "", cwes[identifier], filePaths)
 
                 yield source
-
-                if identifier == self._source_limit:
-                    break
             except Exception as e:
                 pass
 
@@ -250,4 +241,5 @@ class CNistJulietParser(BaseParser):
                 destination_file,
             )
 
+        return gcc_command
         return gcc_command
