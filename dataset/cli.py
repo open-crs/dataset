@@ -32,6 +32,7 @@ def cli() -> None:
 )
 @click.option("--compile-flags", type=str)
 @click.option("--link-flags", type=str)
+@click.option('--rebuild', is_flag=True, default=False)
 @click.option("--cwe", multiple=True, type=int)
 @click.option('--verbose', is_flag=True, default=False)
 @click.option("--log-filename", type=str)
@@ -39,6 +40,7 @@ def build(  # pylint: disable=dangerous-default-value
     testsuite: str,
     compile_flags: str = None,
     link_flags: str = None,
+    rebuild: str = False,
     cwe: typing.List[str] = [],
     verbose: bool = False,
     log_filename: str = None
@@ -60,7 +62,7 @@ def build(  # pylint: disable=dangerous-default-value
 
     compile_flags = split_flags(compile_flags)
     link_flags = split_flags(link_flags)
-    count = manager.preprocess_and_build(compile_flags, link_flags, cwe)
+    count = manager.preprocess_and_build(compile_flags, link_flags, rebuild, cwe)
 
     print(f"Successfully built {count} sources.")
 

@@ -35,12 +35,13 @@ class ParsersManager:
         self,
         additonal_compile_flags: typing.List[str] = None,
         additional_link_flag: typing.List[str] = None,
+        rebuild: bool = False,
         cwes: typing.List[int] = None,
     ) -> int:
         sources_count = 0
         for parser in self._parsers:
             sources_count += parser.preprocess_and_build(
-                additonal_compile_flags, additional_link_flag, cwes
+                additonal_compile_flags, additional_link_flag, rebuild, cwes
             )
 
         return sources_count

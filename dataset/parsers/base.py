@@ -54,10 +54,11 @@ class BaseParser(abc.ABC):
         self,
         additonal_compile_flags: typing.List[str] = None,
         additional_link_flags: typing.List[str] = None,
+        rebuild: bool = False,
         cwes: typing.List[int] = None,
     ) -> int:
         sources_ids = self.dataset_worker.get_entries_ids(
-            self.test_case_name, cwes
+            self.test_case_name, cwes, rebuild
         )
 
         built_count = 0
@@ -81,8 +82,9 @@ class BaseParser(abc.ABC):
         self,
         additonal_compile_flags: typing.List[str] = None,
         additional_link_flag: typing.List[str] = None,
+        rebuild: bool = False,
         cwes: typing.List[int] = None,
     ) -> int:
         self.preprocess()
 
-        return self.build(additonal_compile_flags, additional_link_flag, cwes)
+        return self.build(additonal_compile_flags, additional_link_flag, rebuild, cwes)
