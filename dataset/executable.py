@@ -1,12 +1,11 @@
 import os
 import typing
 
+from commons.iexecutable import IExecutable
 from dataset.configuration import Configuration
 
 
-class Executable:
-    identifier: str
-    cwes: typing.List[int]
+class Executable(IExecutable):
     parent_dataset: str
     is_built: bool
 
