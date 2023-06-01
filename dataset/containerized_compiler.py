@@ -1,3 +1,4 @@
+import logging
 import os
 
 import docker
@@ -46,8 +47,14 @@ class ContainerizedCompiler:
         )
 
     def exec_compiler_command(self, command: str) -> int:
-        result = self.__container.exec_run(
+        exit_code, output = self.__container.exec_run(
             command, workdir=Configuration.ContainerizedCompiler.CONTAINER_WORKING_DIRECTORY
         )
 
-        return result.exit_code
+
+        logging.log(logging.INFO, f"The command \"{command}\" was executed in container, having the exit code {exit_code}.")
+        if output:
+            output = output.decode("utf-8")
+            logging.log(logging.INFO, f"The output is:\n\n{output}")
+
+        return exit_code

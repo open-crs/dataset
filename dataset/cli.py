@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import logging
 import typing
 
 import click
@@ -12,6 +13,10 @@ from dataset.executable import Executable
 from dataset.parsers_manager import AvailableTestSuites, ParsersManager
 
 TESTSUITES_NAMES = [element.name for element in list(AvailableTestSuites)]
+
+# Make some loggers less verbose
+logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
+logging.getLogger("docker.utils.config").setLevel(logging.WARNING)
 
 
 @click.group("cli")
@@ -28,12 +33,28 @@ def cli() -> None:
 @click.option("--compile-flags", type=str)
 @click.option("--link-flags", type=str)
 @click.option("--cwe", multiple=True, type=int)
+@click.option('--verbose', is_flag=True, default=False)
+@click.option("--log-filename", type=str)
 def build(  # pylint: disable=dangerous-default-value
     testsuite: str,
     compile_flags: str = None,
     link_flags: str = None,
     cwe: typing.List[str] = [],
+    verbose: bool = False,
+    log_filename: str = None
 ) -> None:
+    if verbose and log_filename is not None:
+        logging.basicConfig(
+            filename=log_filename,
+            filemode='w',
+            format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+            datefmt='%H:%M:%S',
+            level=logging.DEBUG,
+            force=True
+        )
+    elif not verbose:
+        logging.getLogger().setLevel(logging.WARNING)
+
     manager = ParsersManager()
     manager.add_testsuite(AvailableTestSuites[testsuite])
 
