@@ -64,7 +64,7 @@ def build(  # pylint: disable=dangerous-default-value
     link_flags = split_flags(link_flags)
     count = manager.preprocess_and_build(compile_flags, link_flags, rebuild, cwe)
 
-    print(f"Successfully built {count} sources.")
+    print(f"Successfully built {count} executables.")
 
 
 def split_flags(flags: str) -> typing.List[str]:

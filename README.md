@@ -60,7 +60,7 @@ All `gcc` operations are performed inside a 32-bit Ubuntu 18.04 container.
 
 ```
 ➜ poetry run dataset build --testsuite TOY_TEST_SUITE
-✅ Successfully built 5 sources.
+✅ Successfully built 5 executables.
 ```
 
 #### Executables Listing
