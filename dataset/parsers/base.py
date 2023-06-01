@@ -57,7 +57,7 @@ class BaseParser(abc.ABC):
         cwes: typing.List[int] = None,
     ) -> int:
         sources_ids = self.dataset_worker.get_entries_ids(
-            self.test_case_name, cwes, False
+            self.test_case_name, cwes
         )
 
         built_count = 0
