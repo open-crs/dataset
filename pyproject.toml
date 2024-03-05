@@ -7,7 +7,7 @@ version = "0.1.0"
 [tool.poetry.dependencies]
 pandas= "1.2.3"
 pycparser = "^2.21"
-python = "^3.12"
+python = "^3.10"
 rich = "^12.5.1"
 cwe = "^1.6"
 click = "^8.1.3"
