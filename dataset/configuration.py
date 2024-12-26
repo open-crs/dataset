@@ -1,6 +1,8 @@
+import os
+
 class Configuration:
     class Assets:
-        HOST_WORKING_DIRECTORY = "/opencrs/dataset"
+        HOST_WORKING_DIRECTORY = os.getcwd()
         RAW_TESTSUITES = "raw_testsuites/"
         MAIN_DATASET_SOURCES = "sources/"
         ELF_EXTENSION = ".elf"
