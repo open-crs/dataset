@@ -25,7 +25,6 @@
 
 __pycache__
 *.pyc
-/poetry.lock
 
 # Visual Studio Code symlink
 
