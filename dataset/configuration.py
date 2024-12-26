@@ -11,5 +11,5 @@ class Configuration:
         DATASET_NAME = "vulnerables.csv"
 
     class ContainerizedCompiler:
-        IMAGE_TAG = "ubuntu_32bit_compilator"
+        IMAGE_TAG = "ubuntu18.04_32bit_compiler"
         CONTAINER_WORKING_DIRECTORY = "/home/docker"
