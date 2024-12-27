@@ -8,9 +8,9 @@
 - [Setup](#setup)
 - [Usage](#usage)
   - [As a CLI Tool](#as-a-cli-tool)
-    - [Test Suite Build](#test-suite-build)
-    - [Executables Listing](#executables-listing)
-    - [Help](#help)
+    - [Build Test Suite](#build-test-suite)
+    - [List Executables](#list-executables)
+    - [Get Help](#get-help)
   - [As a Python Module](#as-a-python-module)
 
 ---
@@ -19,10 +19,11 @@
 
 `dataset` is the CRS module that compiles and manages the vulnerable programs which will be analyzed by the CRS.
 
-The supported test suites are the following:
-- NIST's Juliet;
-- NIST's C Test Suite;
-- A toy dataset.
+The supported test suites are:
+
+- NIST's Juliet
+- NIST's C Test Suite
+- A toy dataset
 
 ### Limitations
 
@@ -32,41 +33,102 @@ The supported test suites are the following:
 ## How It Works
 
 The module does the following steps for each test suite that needs to be built:
-1. Getting the available sources into the test suite's folder
-2. Preprocessing the sources for including all the required sources and header
-3. Writing the preprocessed sources into the `sources` folder from the root of the repository
-4. Creating a new entry into the CSV files of the dataset, namely `vulnerables.csv`
-5. Filtering the sources based on the wanted CWEs
-6. Compiling the preprocessed sources with the compile and link flags from multiple sources (module's ones and user-provided)
-7. Writing the executables into the `executables` folder from the root of the repository.
 
-All `gcc` operations are performed inside a 32-bit Ubuntu 18.04 container. 
+1. Gets the available sources into the test suite's directory.
+
+1. Preprocesses the sources for including all the required source code files and header files.
+
+1. Writes the preprocessed sources into the `sources/` directory in the root of the repository.
+
+1. Creates a new entry into the `vulnerables.csv` of the dataset.
+
+1. Filters the source code files based on the wanted CWEs.
+
+1. Compiles the preprocesses source files with the compile and link flags from multiple source code files (module files and user-provided files).
+
+1. Writes the executables into the `executables/` directory in the root of the repository.
+
+All build operations use GCC and are performed inside a 32-bit Ubuntu 18.04 container.
 
 ## Setup
 
-1. Download the repository in `/opencrs/dataset`. If you want to use other path, modify the corresponding configururation parameter.
-2. Ensure that the repository's submodules (which are the test suites) are downloaded too. If you want to clone the repository, use the flag `--recurse-submodules` to download them too.
-3. Install the required Python 3 packages via `poetry install --no-dev`.
-4. Build the Docker image: `docker build --tag ubuntu_32bit_compilator -f docker/Dockerfile.ubuntu_32bit_compilator .`.
-5. Ensure the Docker API is accessible by:
-   - Running the module as `root`; or
-   - Changing the Docker socket permissions (unsecure approach) via `chmod 777 /var/run/docker.sock`.
+1. Make sure you have set up the repositories and Python environment according to the [top-level instructions](https://github.com/open-crs#requirements).
+   That is:
+
+   - Docker is installed and is properly running.
+     Check using:
+
+     ```console
+     docker version
+     docker ps -a
+     docker run --rm hello-world
+     ```
+
+     These commands should run without errors.
+
+   - The current repository and the [`commons` repository](https://github.com/open-crs/commons) are cloned (with submodules) in the same directory.
+
+   - You are running all commands inside a Python virtual environment.
+     There should be `(.venv)` prefix to your prompt.
+
+   - You have installed Poetry in the virtual environment.
+     If you run:
+
+     ```console
+     which poetry
+     ```
+
+     you should get a path ending with `.venv/bin/poetry`.
+
+1. Disable the Python Keyring:
+
+   ```console
+   export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
+   ```
+
+   This is an problem that may occur in certain situations, preventing Poetry from getting packages.
+
+1. Install the required packages with Poetry (based on `pyprojects.toml`):
+
+   ```console
+   poetry install --only main
+   ```
+
+1. Build the Docker image used to build the dataset assets:
+
+   ```console
+   docker build --platform linux/386 --tag ubuntu18.04_32bit_compiler -f docker/Dockerfile.ubuntu18.04_32bit_compiler .
+   ```
 
 ## Usage
 
+You can use the `dataset` module either standalone, as a CLI tool, or integrated into Python applications, as a Python module.
+
 ### As a CLI Tool
 
-#### Test Suite Build
+As a CLI tool, you can either use the `cli.py` module:
 
+```console
+python dataset/cli.py
 ```
-➜ poetry run dataset build --testsuite TOY_TEST_SUITE
+
+or the Poetry interface:
+
+```console
+poetry run dataset
+```
+
+#### Build Test Suite
+
+```console
+$ poetry run dataset build --testsuite TOY_TEST_SUITE
 ✅ Successfully built 5 executables.
 ```
 
-#### Executables Listing
+#### List Executables
 
-```
-➜ poetry run dataset get
+```console
+$ poetry run dataset get
 ✅ The available executables are:
 
 ┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -80,10 +142,10 @@ All `gcc` operations are performed inside a 32-bit Ubuntu 18.04 container.
 └──────────────────┴─────────────────────────────┴─────────────────┴──────────────────────────────────┘
 ```
 
-#### Help
+#### Get Help
 
-```
-➜ poetry run dataset
+```console
+$ poetry run dataset
 Usage: dataset [OPTIONS] COMMAND [ARGS]...
 
   Builds and filters datasets of vulnerable programs

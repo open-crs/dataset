@@ -1,6 +1,8 @@
+import os
+
 class Configuration:
     class Assets:
-        HOST_WORKING_DIRECTORY = "/opencrs/dataset"
+        HOST_WORKING_DIRECTORY = os.getcwd()
         RAW_TESTSUITES = "raw_testsuites/"
         MAIN_DATASET_SOURCES = "sources/"
         ELF_EXTENSION = ".elf"
@@ -11,5 +13,5 @@ class Configuration:
         DATASET_NAME = "vulnerables.csv"
 
     class ContainerizedCompiler:
-        IMAGE_TAG = "ubuntu_32bit_compilator"
+        IMAGE_TAG = "ubuntu18.04_32bit_compiler"
         CONTAINER_WORKING_DIRECTORY = "/home/docker"
