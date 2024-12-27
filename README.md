@@ -102,7 +102,7 @@ All build operations use GCC and are performed inside a 32-bit Ubuntu 18.04 cont
 
 ## Usage
 
-You can use the `dataset` module either standalone, as a CLI tool, or integrated into Python applications.
+You can use the `dataset` module either standalone, as a CLI tool, or integrated into Python applications, as a Python module.
 
 ### As a CLI Tool
 
@@ -112,7 +112,7 @@ As a CLI tool, you can either use the `cli.py` module:
 python dataset/cli.py
 ```
 
-or use the Poetry interface:
+or the Poetry interface:
 
 ```console
 poetry run dataset
