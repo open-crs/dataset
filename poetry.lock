@@ -672,17 +672,17 @@ invoke = ["invoke (>=2.0)"]
 
 [[package]]
 name = "patchelf"
-version = "0.15.0.0"
+version = "0.16.1.0"
 description = "A small utility to modify the dynamic linker and RPATH of ELF executables."
 optional = false
 python-versions = "*"
 files = [
-    {file = "patchelf-0.15.0.0-py2.py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl", hash = "sha256:08e5e30a9415a8628de47726fbf15bfcd89be35df51c8a0a12372aebd0c5b4f6"},
-    {file = "patchelf-0.15.0.0-py2.py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.musllinux_1_1_ppc64le.whl", hash = "sha256:4ce9d08119816bc4316c8ecc5f33da42384934fc0fc9cfbdded53a4930705466"},
-    {file = "patchelf-0.15.0.0-py2.py3-none-manylinux_2_17_s390x.manylinux2014_s390x.musllinux_1_1_s390x.whl", hash = "sha256:ae19b0f91aabc9af2608a4ca0395533f1df9122e6abc11ef2c8db6e4db0f98c2"},
-    {file = "patchelf-0.15.0.0-py2.py3-none-manylinux_2_5_i686.manylinux1_i686.musllinux_1_1_i686.whl", hash = "sha256:f3f87aee44d1d1b2209e38c4227b0316bb03538df68d20b3d96205aa87868d95"},
-    {file = "patchelf-0.15.0.0-py2.py3-none-manylinux_2_5_x86_64.manylinux1_x86_64.musllinux_1_1_x86_64.whl", hash = "sha256:52e48c08110f2988a9761a5a383f7ae35b1e8e06a140e320d18386d3510697ed"},
-    {file = "patchelf-0.15.0.0.tar.gz", hash = "sha256:0f8dcf0df0ba919ce37e8aef67a08bde5326897098451df94ab3a5eedc9e08d9"},
+    {file = "patchelf-0.16.1.0-py2.py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl", hash = "sha256:c8345911769ace4e068dfe3ac4c04ec5e4965907954e77781ef031854eb408e8"},
+    {file = "patchelf-0.16.1.0-py2.py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.musllinux_1_1_ppc64le.whl", hash = "sha256:f363938d86e141ac9a6319e03f49886ec56073bbc4b5fd318d5f511f06636264"},
+    {file = "patchelf-0.16.1.0-py2.py3-none-manylinux_2_17_s390x.manylinux2014_s390x.musllinux_1_1_s390x.whl", hash = "sha256:557be98265cfbb48648a912519044f1add1bcc872713a9e087db5779c22b14c2"},
+    {file = "patchelf-0.16.1.0-py2.py3-none-manylinux_2_5_i686.manylinux1_i686.musllinux_1_1_i686.whl", hash = "sha256:39cc1d22724f0006ec7497cf40d7996177049411094d7c2217882abde1d81bd7"},
+    {file = "patchelf-0.16.1.0-py2.py3-none-manylinux_2_5_x86_64.manylinux1_x86_64.musllinux_1_1_x86_64.whl", hash = "sha256:bbbed2e5a244f122835f700049172d562955b4411a73ed91b18ce342efbfac5b"},
+    {file = "patchelf-0.16.1.0.tar.gz", hash = "sha256:b5d38936fdb5256142ba30dc6fe93b1b5cb892bfa5029f32febea0dcfa5ddd13"},
 ]
 
 [package.extras]
@@ -796,13 +796,13 @@ files = [
 
 [[package]]
 name = "pyelftools"
-version = "0.31"
+version = "0.29"
 description = "Library for analyzing ELF files and DWARF debugging information"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pyelftools-0.31-py3-none-any.whl", hash = "sha256:f52de7b3c7e8c64c8abc04a79a1cf37ac5fb0b8a49809827130b858944840607"},
-    {file = "pyelftools-0.31.tar.gz", hash = "sha256:c774416b10310156879443b81187d182d8d9ee499660380e645918b50bc88f99"},
+    {file = "pyelftools-0.29-py2.py3-none-any.whl", hash = "sha256:519f38cf412f073b2d7393aa4682b0190fa901f7c3fa0bff2b82d537690c7fc1"},
+    {file = "pyelftools-0.29.tar.gz", hash = "sha256:ec761596aafa16e282a31de188737e5485552469ac63b60cfcccf22263fd24ff"},
 ]
 
 [[package]]
@@ -1203,4 +1203,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "925857227e39967153171d9a9c2fb83603b2346b0732758283b37ac8a46ec025"
+content-hash = "395356bfa5e31611fcd12dc3c8275ebcdca28b98556c2a517d5f60cdca52ae40"
