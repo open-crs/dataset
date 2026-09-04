@@ -1,22 +1,25 @@
-[tool.poetry]
+[project]
 name = "dataset"
-description = "Module for approximating the attack surface of an executable"
-authors = ["OpenCRS"]
 version = "0.1.0"
+description = "Module for approximating the attack surface of an executable"
+authors = [{ name = "OpenCRS" }]
+requires-python = ">=3.10,<4"
+dependencies = [
+    "commons",
+    "pandas==2.2.1",
+    "numpy==1.26.4",
+    "pycparser>=2.21,<3",
+    "rich>=12.5.1,<13",
+    "cwe>=1.6,<2",
+    "click>=8.1.3,<9",
+    "patchelf>=0.16.1,<0.17",
+    "docker>=6.1.2,<7",
+    "requests==2.31.0",
+    "pyelftools>=0.29,<0.30",
+]
 
-[tool.poetry.dependencies]
-commons = { path = "../commons", develop = false }
-pandas = "2.2.1"
-numpy = "1.26.4"
-pycparser = "^2.21"
-python = "^3.10"
-rich = "^12.5.1"
-cwe = "^1.6"
-click = "^8.1.3"
-patchelf = "^0.16.1"
-docker = "^6.1.2"
-requests = "2.31.0"
-pyelftools = "^0.29"
-
-[tool.poetry.scripts]
+[project.scripts]
 dataset = "dataset.cli:main"
+
+[tool.uv.sources]
+commons = { path = "../commons", editable = false }

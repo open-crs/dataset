@@ -71,27 +71,22 @@ All build operations use GCC and are performed inside a 32-bit Ubuntu 18.04 cont
    - You are running all commands inside a Python virtual environment.
      There should be `(.venv)` prefix to your prompt.
 
-   - You have installed Poetry in the virtual environment.
+   - You have installed uv.
      If you run:
 
      ```console
-     which poetry
+     which uv
      ```
+     
+     you should get a path ending with `.local/bin/uv`.
 
-     you should get a path ending with `.venv/bin/poetry`.
 
-1. Disable the Python Keyring:
-
-   ```console
-   export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
-   ```
-
-   This is an problem that may occur in certain situations, preventing Poetry from getting packages.
-
-1. Install the required packages with Poetry (based on `pyprojects.toml`):
+1. Install the required packages using uv (based on `pyproject.toml`):
 
    ```console
-   poetry install --only main
+   uv venv
+   source .venv/bin/activate
+   uv sync
    ```
 
 1. Build the Docker image used to build the dataset assets:
@@ -112,23 +107,23 @@ As a CLI tool, you can either use the `cli.py` module:
 python dataset/cli.py
 ```
 
-or the Poetry interface:
+or the uv interface:
 
 ```console
-poetry run dataset
+uv run dataset
 ```
 
 #### Build Test Suite
 
 ```console
-$ poetry run dataset build --testsuite TOY_TEST_SUITE
+$ uv run dataset build --testsuite TOY_TEST_SUITE
 ✅ Successfully built 5 executables.
 ```
 
 #### List Executables
 
 ```console
-$ poetry run dataset get
+$ uv run dataset get
 ✅ The available executables are:
 
 ┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -145,7 +140,7 @@ $ poetry run dataset get
 #### Get Help
 
 ```console
-$ poetry run dataset
+$ uv run dataset
 Usage: dataset [OPTIONS] COMMAND [ARGS]...
 
   Builds and filters datasets of vulnerable programs
