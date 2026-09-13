@@ -71,7 +71,7 @@ All build operations use GCC and are performed inside a 32-bit Ubuntu 18.04 cont
    - You are running all commands inside a Python virtual environment.
      There should be `(.venv)` prefix to your prompt.
 
-   - You have installed uv.
+   - You have installed uv on your system.
      If you run:
 
      ```console
@@ -86,7 +86,7 @@ All build operations use GCC and are performed inside a 32-bit Ubuntu 18.04 cont
    ```console
    uv venv
    source .venv/bin/activate
-   uv sync
+   uv sync --no-dev
    ```
 
 1. Build the Docker image used to build the dataset assets:
