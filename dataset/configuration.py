@@ -25,9 +25,6 @@ class Configuration:
             return cls._IMAGE_TAGS[Configuration.Toolchain.TARGET_ARCH]
     
     class Toolchain:
-        # Cross-compilation target. Defaults to native x86 so existing
-        # behaviour is unchanged. Set OPENCRS_TARGET_ARCH=aarch64 to build
-        # ARM targets.
         TARGET_ARCH = os.environ.get("OPENCRS_TARGET_ARCH", "x86")
 
         _COMPILERS = {

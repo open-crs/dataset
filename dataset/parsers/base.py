@@ -26,7 +26,6 @@ class BaseParser(abc.ABC):
         link_flags: typing.List[str] = None,
     ) -> None:
         self.test_case_name = test_case_name
-        #self.compile_flags = compile_flags if compile_flags else []
         self.compile_flags = Configuration.Toolchain.adapt_compile_flags(
                 compile_flags if compile_flags else []
         )
