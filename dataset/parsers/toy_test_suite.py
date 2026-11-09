@@ -10,11 +10,12 @@ DATASET_NAME = "toy_test_suite"
 COMPILE_FLAGS = ["-no-pie", "-O0", "-std=gnu99", "-m32"]
 DATASET_FOLDER = "raw_testsuites/toy_test_suite/"
 COMMAND_SUPRESS_OUTPUT = " >/dev/null 2>&1"
+CC = Configuration.Toolchain.CC
 GCC_PREPROCESS_COMMAND = (
-    "gcc -E {source_file} -I {include_dir} -o {output_file}"
+    CC + " -E {source_file} -I {include_dir} -o {output_file}"
 )
 GCC_BUILD_COMMAND = (
-    "gcc {compile_flags} {source_file} {link_flags} -o {output_file}"
+    CC + " {compile_flags} {source_file} {link_flags} -o {output_file}"
 )
 
 
