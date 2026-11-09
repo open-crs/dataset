@@ -1,1 +1,6 @@
 name,cwes,parent_dataset,is_built
+toy_test_suite_0,0,toy_test_suite,True
+toy_test_suite_1,121,toy_test_suite,True
+toy_test_suite_2,476,toy_test_suite,True
+toy_test_suite_3,476,toy_test_suite,True
+toy_test_suite_4,0,toy_test_suite,True

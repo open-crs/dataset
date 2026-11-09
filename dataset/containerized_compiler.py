@@ -39,7 +39,7 @@ class ContainerizedCompiler:
             }
 
         self.__container = self.__docker_client.containers.run(
-            Configuration.ContainerizedCompiler.IMAGE_TAG,
+            Configuration.ContainerizedCompiler.image_tag(),
             command="tail -f /dev/null",
             detach=True,
             tty=True,
