@@ -22,14 +22,16 @@ MAIN_DATASET_HEADERS = Configuration.Assets.MAIN_DATASET_SOURCES + "nist_lib/"
 DATASET_MANIFEST = DATASET_FOLDER + "manifest.xml"
 
 COMMAND_SUPRESS_OUTPUT = " >/dev/null 2>&1"
+CC = Configuration.Toolchain.CC
+CXX = Configuration.Toolchain.CXX
 GCC_PREPROCESS_COMMAND = (
-    "gcc -E {} -O0 -DOMITGOOD -DINCLUDEMAIN -I{}             -o {}"
+    CC +" -E {} -O0 -DOMITGOOD -DINCLUDEMAIN -I{}             -o {}"
 )
 GPP_PREPROCESS_COMMAND = (
-    "g++ -E {} -O0 -DOMITGOOD -DINCLUDEMAIN -I{}              -o {}"
+    CXX + " -E {} -O0 -DOMITGOOD -DINCLUDEMAIN -I{}              -o {}"
 )
-GCC_BUILD_COMMAND = "gcc -x  c  {} {} {} -o {} -lpthread -lm "
-GPP_BUILD_COMMAND = "g++ -x c++ {} {} {} -o {} -lpthread -lm "
+GCC_BUILD_COMMAND = CC + " -x  c  {} {} {} -o {} -lpthread -lm "
+GPP_BUILD_COMMAND = CXX + " -x c++ {} {} {} -o {} -lpthread -lm "
 
 ADITIOAL_GCC_SOURCES = (
     " "
