@@ -53,10 +53,10 @@ The module does the following steps for each test suite that needs to be built:
 
 1. Writes the executables into the `executables/` directory in the root of the repository.
 
-All build operations use GCC and are performed inside a 32-bit Ubuntu 18.04 container.
+All build operations use GCC and are performed inside a container.
 The target architecture is selected by the `OPENCRS_TARGET_ARCH` environment variable (default `x86`): 
 - `x86` builds with `gcc`/`g++` in a 32-bit Ubuntu 18.04 container
-- `aarch64` cross-compiles with `aarch64-linux-gnu-gcc`/`aarch64-linux-gnu-g++` in an Ubuntu 22.04 container. See [Building for AArch64 (ARM)](#building-for-aarch64-arm).
+- `aarch64` cross-compiles with `aarch64-linux-gnu-gcc`/`aarch64-linux-gnu-g++` in an Ubuntu 22.04 container.
 
 ## Setup
 
@@ -137,17 +137,17 @@ $ poetry run dataset build --testsuite TOY_TEST_SUITE
 
 ```console
 $ poetry run dataset get
-✅ The available executables are:
+The available executables are:
 
-┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ ID               ┃ CWEs                        ┃ Parent Database ┃ Full Path                        ┃
-┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ toy_test_suite_0 │ Stack-based Buffer Overflow │ toy_test_suite  │ executables/toy_test_suite_0.elf │
-│ toy_test_suite_1 │                             │ toy_test_suite  │ executables/toy_test_suite_1.elf │
-│ toy_test_suite_2 │ NULL Pointer Dereference    │ toy_test_suite  │ executables/toy_test_suite_2.elf │
-│ toy_test_suite_3 │ NULL Pointer Dereference    │ toy_test_suite  │ executables/toy_test_suite_3.elf │
-│ toy_test_suite_4 │                             │ toy_test_suite  │ executables/toy_test_suite_4.elf │
-└──────────────────┴─────────────────────────────┴─────────────────┴──────────────────────────────────┘
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID               ┃ CWEs                        ┃ Parent Database ┃ Full Path                            ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ toy_test_suite_0 │                             │ toy_test_suite  │ executables/x86/toy_test_suite_0.elf │
+│ toy_test_suite_1 │ Stack-based Buffer Overflow │ toy_test_suite  │ executables/x86/toy_test_suite_1.elf │
+│ toy_test_suite_2 │ NULL Pointer Dereference    │ toy_test_suite  │ executables/x86/toy_test_suite_2.elf │
+│ toy_test_suite_3 │ NULL Pointer Dereference    │ toy_test_suite  │ executables/x86/toy_test_suite_3.elf │
+│ toy_test_suite_4 │                             │ toy_test_suite  │ executables/x86/toy_test_suite_4.elf │
+└──────────────────┴─────────────────────────────┴─────────────────┴──────────────────────────────────────┘
 ```
 
 #### Get Help
@@ -212,14 +212,33 @@ Set `OPENCRS_TARGET_ARCH=aarch64` and build as usual:
 $ OPENCRS_TARGET_ARCH=aarch64 poetry run dataset build --testsuite TOY_TEST_SUITE
 ✅ Successfully built 5 executables.
 ```
- 
-The produced ELFs land in `executables/`, exactly as for `x86`. Confirm they are genuine AArch64 binaries:
+
+The produced ELFs land in `executables/aarch64/` — each architecture gets its own output directory and build index (`vulnerables_aarch64.csv`), so the x86 corpus in `executables/` is never reused or overwritten when you switch targets.
+
+#### List Executables
+
+```console
+$ OPENCRS_TARGET_ARCH=aarch64 poetry run dataset get
+The available executables are:
+
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID               ┃ CWEs                        ┃ Parent Database ┃ Full Path                                ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ toy_test_suite_0 │                             │ toy_test_suite  │ executables/aarch64/toy_test_suite_0.elf │
+│ toy_test_suite_1 │ Stack-based Buffer Overflow │ toy_test_suite  │ executables/aarch64/toy_test_suite_1.elf │
+│ toy_test_suite_2 │ NULL Pointer Dereference    │ toy_test_suite  │ executables/aarch64/toy_test_suite_2.elf │
+│ toy_test_suite_3 │ NULL Pointer Dereference    │ toy_test_suite  │ executables/aarch64/toy_test_suite_3.elf │
+│ toy_test_suite_4 │                             │ toy_test_suite  │ executables/aarch64/toy_test_suite_4.elf │
+└──────────────────┴─────────────────────────────┴─────────────────┴──────────────────────────────────────────┘
+```
+
+Confirm they are genuine AArch64 binaries:
  
 ```console
-$ file executables/toy_test_suite_0.elf
-executables/toy_test_suite_0.elf: ELF 64-bit LSB executable, ARM aarch64, ...
+$ file executables/aarch64/toy_test_suite_0.elf
+executables/aarch64/toy_test_suite_0.elf: ELF 64-bit LSB executable, ARM aarch64, ...
  
-$ readelf -h executables/toy_test_suite_0.elf | grep -E "Machine|Type"
+$ readelf -h executables/aarch64/toy_test_suite_0.elf | grep -E "Machine|Type"
   Type:                              EXEC (Executable file)
   Machine:                           AArch64
 ```
