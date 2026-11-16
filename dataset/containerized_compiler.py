@@ -28,6 +28,8 @@ class ContainerizedCompiler:
                 Configuration.Assets.HOST_WORKING_DIRECTORY,
                 folder,
             )
+            os.makedirs(host_folder, exist_ok=True)
+            
             container_folder = os.path.join(
                 Configuration.ContainerizedCompiler.CONTAINER_WORKING_DIRECTORY,
                 folder,

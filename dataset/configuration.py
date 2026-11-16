@@ -1,16 +1,18 @@
 import os
 
+_TARGET_ARCH = os.environ.get("OPENCRS_TARGET_ARCH", "x86")
+
 class Configuration:
     class Assets:
         HOST_WORKING_DIRECTORY = os.getcwd()
         RAW_TESTSUITES = "raw_testsuites/"
-        MAIN_DATASET_SOURCES = "sources/"
+        MAIN_DATASET_SOURCES = f"sources/{_TARGET_ARCH}/"
         ELF_EXTENSION = ".elf"
-        MAIN_DATASET_EXECUTABLES = "executables/"
-
+        MAIN_DATASET_EXECUTABLES = f"executables/{_TARGET_ARCH}"
+    
     class DatasetCreation:
         CWES_SEPARATOR = ","
-        DATASET_NAME = "vulnerables.csv"
+        DATASET_NAME = f"vulnerables_{_TARGET_ARCH}.csv"
 
     class ContainerizedCompiler:
         CONTAINER_WORKING_DIRECTORY = "/home/docker"
@@ -26,7 +28,6 @@ class Configuration:
     
     class Toolchain:
         TARGET_ARCH = os.environ.get("OPENCRS_TARGET_ARCH", "x86")
-
         _COMPILERS = {
             "x86": ("gcc", "g++"),
             "aarch64": ("aarch64-linux-gnu-gcc", "aarch64-linux-gnu-g++"),
