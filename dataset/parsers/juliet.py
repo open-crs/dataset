@@ -217,11 +217,9 @@ class CNistJulietParser(BaseParser):
         sources = " ".join(glob.iglob(source_path + "/**"))
 
         binary_type = os.path.splitext(sources.split(" ")[-1])[1]
-
-        compile_flags = self.compile_flags + (
-            additonal_compile_flags if additonal_compile_flags else []
+        compile_flags = " ".join(
+            self._merge_compile_flags(additonal_compile_flags)
         )
-        compile_flags = " ".join(compile_flags)
         link_flags = self.link_flags + (
             additional_link_flags if additional_link_flags else []
         )

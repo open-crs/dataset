@@ -26,9 +26,7 @@ class BaseParser(abc.ABC):
         link_flags: typing.List[str] = None,
     ) -> None:
         self.test_case_name = test_case_name
-        self.compile_flags = Configuration.Toolchain.adapt_compile_flags(
-                compile_flags if compile_flags else []
-        )
+        self.compile_flags = compile_flags if compile_flags else []
         self.link_flags = link_flags if link_flags else []
         self.dataset_worker = VulnerableExecutablesIndex(DATASET_NAME)
         self.compiler = ContainerizedCompiler()
@@ -48,7 +46,16 @@ class BaseParser(abc.ABC):
 
     def _execute_command(self, command: str) -> int:
         return self.compiler.exec_compiler_command(command)
+    
+    def _merge_compile_flags(
+        self, additonal_compile_flags: typing.List[str] = None
+    ) -> typing.List[str]:
+        merged = self.compile_flags + (
+            additonal_compile_flags if additonal_compile_flags else []
+        )
 
+        return Configuration.Toolchain.adapt_compile_flags(merged) 
+    
     @abc.abstractmethod
     def preprocess(self) -> None:
         raise NotImplementedError()
