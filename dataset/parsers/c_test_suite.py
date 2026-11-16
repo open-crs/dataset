@@ -16,11 +16,12 @@ DATASET_MANIFEST = DATASET_FOLDER + "manifest.xml"
 ID_REGEX = r"000\/149\/([0-9]+)"
 CWE_REGEX = r"CWE-([0-9]+)"
 COMMAND_SUPRESS_OUTPUT = " >/dev/null 2>&1"
+CC = Configuration.Toolchain.CC
 GCC_PREPROCESS_COMMAND = (
-    "gcc -E {source_file} -I {include_dir} -o {output_file}"
+   CC + " -E {source_file} -I {include_dir} -o {output_file}"
 )
 GCC_BUILD_COMMAND = (
-    "gcc {compile_flags} {source_file} {link_flags} -o {output_file}"
+    CC + " {compile_flags} {source_file} {link_flags} -o {output_file}"
 )
 
 
@@ -103,10 +104,9 @@ class CTestSuiteParser(BaseParser):
             identifier + Configuration.Assets.ELF_EXTENSION,
         )
         sources = " ".join(glob.iglob(source_path + "**/*.c"))
-        compile_flags = self.compile_flags + (
-            additonal_compile_flags if additonal_compile_flags else []
+        compile_flags = " ".join(
+            self._merge_compile_flags(additonal_compile_flags)
         )
-        compile_flags = " ".join(compile_flags)
         link_flags = self.link_flags + (
             additional_link_flags if additional_link_flags else []
         )

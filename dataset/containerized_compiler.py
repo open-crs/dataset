@@ -28,6 +28,8 @@ class ContainerizedCompiler:
                 Configuration.Assets.HOST_WORKING_DIRECTORY,
                 folder,
             )
+            os.makedirs(host_folder, exist_ok=True)
+            
             container_folder = os.path.join(
                 Configuration.ContainerizedCompiler.CONTAINER_WORKING_DIRECTORY,
                 folder,
@@ -39,7 +41,7 @@ class ContainerizedCompiler:
             }
 
         self.__container = self.__docker_client.containers.run(
-            Configuration.ContainerizedCompiler.IMAGE_TAG,
+            Configuration.ContainerizedCompiler.image_tag(),
             command="tail -f /dev/null",
             detach=True,
             tty=True,
