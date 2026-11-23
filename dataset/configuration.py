@@ -19,7 +19,7 @@ class Configuration:
 
         _IMAGE_TAGS = {
                 "x86": "ubuntu18.04_32bit_compiler",
-                "aarch64": "ubuntu22.04_aarch64_cross_compiler",
+                "aarch64": "ubuntu24.04_aarch64_cross_compiler",
         }
 
         @classmethod
