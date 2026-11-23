@@ -16,6 +16,9 @@
   - [Build the AArch64 Compiler Image](#build-the-aarch64-compiler-image)
   - [Build an AArch64 Test Suite](#build-an-aarch64-test-suite)
   - [Run the AArch64 Binaries](#run-the-aarch64-binaries)
+- [Building for x86_64](#building-for-x86_64)
+  - [Build the x86_64 Compiler Image](#build-the-x86_64-compiler-image)
+  - [Build an x86_64 Test Suite](#build-an-x86_64-test-suite)
   - [Switch Back to x86](#switch-back-to-x86)
 ---
 
@@ -32,7 +35,8 @@ The supported test suites are:
 ### Limitations
 
 - ELF format
-- x86 architecture 
+- x86 architecture
+- x86_64 architecture
 - AArch64 (ARM) arhitecture
 
 ## How It Works
@@ -56,6 +60,7 @@ The module does the following steps for each test suite that needs to be built:
 All build operations use GCC and are performed inside a container.
 The target architecture is selected by the `OPENCRS_TARGET_ARCH` environment variable (default `x86`): 
 - `x86` builds with `gcc`/`g++` in a 32-bit Ubuntu 18.04 container
+- `x86_64` builds with `gcc`/`g++` in an Ubuntu 24.04 container
 - `aarch64` cross-compiles with `aarch64-linux-gnu-gcc`/`aarch64-linux-gnu-g++` in an Ubuntu 22.04 container.
 
 ## Setup
@@ -275,6 +280,65 @@ $ ./executables/toy_test_suite_0.elf; echo "exit: $?"
 ```
  
 > **Note.** These are deliberately vulnerable programs, so a crash (non-zero exit) can be the *correct* behaviour — a NULL-dereference or buffer-overflow target is meant to crash. You are confirming the binary **loads and starts executing** under emulation, not that it exits cleanly.
+
+## Building for x86_64
+
+Using the same `OPENCRS_TARGET_ARCH` mechanism, you can also build native 64-bit (`x86_64`) targets without stack protectors or PIE (`-fno-stack-protector`, `-no-pie`).
+
+### Build the x86_64 Compiler Image
+
+The x86_64 toolchain lives in its own container image, separate from the 32-bit one. Build it once:
+
+```console
+docker build --platform linux/amd64 \
+  --tag ubuntu24.04_x86_64_compiler \
+  -f docker/Dockerfile.ubuntu24.04_x86_64_compiler .
+```
+
+You can confirm the image carries the compiler:
+
+```console
+docker run --rm ubuntu24.04_x86_64_compiler gcc --version
+```
+
+### Build an x86_64 Test Suite
+
+Set `OPENCRS_TARGET_ARCH=x86_64` and build as usual:
+
+```console
+$ OPENCRS_TARGET_ARCH=x86_64 poetry run dataset build --testsuite TOY_TEST_SUITE
+✅ Successfully built 5 executables.
+```
+
+The produced ELFs land in `executables/x86_64/` and are indexed in `vulnerables_x86_64.csv`.
+
+#### List Executables
+
+```console
+$ OPENCRS_TARGET_ARCH=x86_64 poetry run dataset get
+The available executables are:
+
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID               ┃ CWEs                        ┃ Parent Database ┃ Full Path                               ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ toy_test_suite_0 │ NULL Pointer Dereference    │ toy_test_suite  │ executables/x86_64/toy_test_suite_0.elf │
+│ toy_test_suite_1 │ Stack-based Buffer Overflow │ toy_test_suite  │ executables/x86_64/toy_test_suite_1.elf │
+│ toy_test_suite_2 │                             │ toy_test_suite  │ executables/x86_64/toy_test_suite_2.elf │
+│ toy_test_suite_3 │                             │ toy_test_suite  │ executables/x86_64/toy_test_suite_3.elf │
+│ toy_test_suite_4 │ NULL Pointer Dereference    │ toy_test_suite  │ executables/x86_64/toy_test_suite_4.elf │
+└──────────────────┴─────────────────────────────┴─────────────────┴─────────────────────────────────────────┘
+```
+
+Confirm they are genuine 64-bit x86-64 binaries:
+
+```console
+$ file executables/x86_64/toy_test_suite_0.elf
+executables/x86_64/toy_test_suite_0.elf: ELF 64-bit LSB executable, x86-64, ...
+
+$ readelf -h executables/x86_64/toy_test_suite_0.elf | grep -E "Machine|Type"
+  Type:                              EXEC (Executable file)
+  Machine:                           Advanced Micro Devices X86-64
+```
  
 ### Switch Back to x86
  
