@@ -1,3 +1,4 @@
+import os
 import typing
 
 import pandas
@@ -5,6 +6,7 @@ import pandas
 from dataset.configuration import Configuration
 from dataset.executable import Executable
 
+_DATASET_COLUMNS = ["name", "cwes", "parent_dataset", "is_built"]
 
 class VulnerableExecutablesIndex:
     _filename: str = None
@@ -12,7 +14,10 @@ class VulnerableExecutablesIndex:
 
     def __init__(self, filename: str) -> None:
         self._filename = filename
-        self._dataset = pandas.read_csv(self._filename)
+        if os.path.exists(self._filename):
+            self._dataset = pandas.read_csv(self._filename)
+        else:
+            self._dataset = pandas.DataFrame(columns=_DATASET_COLUMNS)
 
     def __del__(self) -> None:
         """Destroys a VulnerableExecutablesIndex instance."""

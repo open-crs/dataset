@@ -7,8 +7,9 @@ from dataset.source import Source
 from dataset.vulnerable_executables_index import VulnerableExecutablesIndex
 
 COMMAND_SUPRESS_OUTPUT = " >/dev/null 2>&1"
-GCC_PREPROCESS_COMMAND = "gcc -E {} -I {} -o {}"
-GCC_BUILD_COMMAND = "gcc {} {} {} -o {}"
+CC = Configuration.Toolchain.CC
+GCC_PREPROCESS_COMMAND = CC + " -E {} -I {} -o {}"
+GCC_BUILD_COMMAND = CC + " {} {} {} -o {}"
 DATASET_NAME = Configuration.DatasetCreation.DATASET_NAME
 
 
@@ -45,7 +46,16 @@ class BaseParser(abc.ABC):
 
     def _execute_command(self, command: str) -> int:
         return self.compiler.exec_compiler_command(command)
+    
+    def _merge_compile_flags(
+        self, additonal_compile_flags: typing.List[str] = None
+    ) -> typing.List[str]:
+        merged = self.compile_flags + (
+            additonal_compile_flags if additonal_compile_flags else []
+        )
 
+        return Configuration.Toolchain.adapt_compile_flags(merged) 
+    
     @abc.abstractmethod
     def preprocess(self) -> None:
         raise NotImplementedError()

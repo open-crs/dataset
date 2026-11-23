@@ -5,7 +5,7 @@
 
 # Vulnerables executables CSV
 
-/vulnerables.csv
+/vulnerables_*.csv
 
 # Preprocessed sources
 

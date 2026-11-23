@@ -1,0 +1,18 @@
+FROM --platform=linux/amd64 ubuntu:24.04
+
+ENV USER="docker" \
+    HOME="/home/docker" \
+    DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        gcc-13-aarch64-linux-gnu \
+        g++-13-aarch64-linux-gnu \
+        libc6-dev-arm64-cross \
+        make \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN ln -sf /usr/bin/aarch64-linux-gnu-gcc-13 /usr/bin/aarch64-linux-gnu-gcc \
+    && ln -sf /usr/bin/aarch64-linux-gnu-g++-13 /usr/bin/aarch64-linux-gnu-g++
+
+CMD ["/bin/bash"]
